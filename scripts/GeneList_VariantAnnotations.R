@@ -20,9 +20,8 @@ LOF <- c("frameshift_variant", "stop_gained", "start_lost",
          "stop_gained&inframe_deletion", "frameshift_variant&stop_retained_variant")
 
 # Gene Lists
-setwd("data/genelist")
-dee_monoallelic <- fread("dee_monoallelic.tsv", header = F)
-asd_monoallelic <- fread("asd_monoallelic.tsv", header = F)
-dd_monoallelic <- fread("dd_monoallelic.tsv", header = F)
-clingen_HI <- fread("clingen_HI.tsv", header = F)
-mgi_essential <- fread("mgi_essential.tsv", header = F)
+dee_monoallelic <- fread("data/genelist/dee_monoallelic.tsv", header = F)
+asd_monoallelic <- fread("data/genelist/asd_monoallelic.tsv", header = F)
+dd_monoallelic <- fread("data/genelist/dd_monoallelic.tsv", header = F)
+clingen_HI <- fread("data/genelist/clingen_HI.tsv", header = F)
+mgi_essential <- fread("data/genelist/mgi_essential.tsv", header = F)
