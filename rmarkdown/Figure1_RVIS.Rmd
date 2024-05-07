@@ -3,6 +3,7 @@ title: "Figure1_RVIS"
 output: html_document
 date: "2023-09-20"
 ---
+setwd()
 
 ```{r}
 library(tidyverse)
@@ -12,10 +13,10 @@ library(R.utils)
 ```
 
 ```{r, echo = FALSE}
-source("~/ancestral_diversity/scripts/GeneList_VariantAnnotations.R")
-source("~/ancestral_diversity/scripts/gnomAD_RVIS.R")
+source("scripts/GeneList_VariantAnnotations.R")
+source("scripts/gnomAD_RVIS.R")
 
-gnomAD_data <- fread("~/ancestral_diversity/data/UKB_RVIS.csv")
+gnomAD_data <- fread("data/UKB_RVIS.csv")
 ```
 
 # Figure 1a: gnomAD RVIS Curves
@@ -160,8 +161,8 @@ gnomAD_RVIS_log <- gnomAD_RVIS_log %>%
 
 # UKBiobank
 ```{r}
-UKB_data <- fread("~/ancestral_diversity/data/UKB_RVIS.csv")
-source("~/ancestral_diversity/scripts/UKB_RVIS.R")
+UKB_data <- fread("data/UKB_RVIS.csv")
+source("scripts/UKB_RVIS.R")
 ```
 
 # Figure 1c: UKBiobank RVIS Curves
