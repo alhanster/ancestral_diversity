@@ -8,7 +8,7 @@ score_cols = c("Maximally Diverse (n=43k)", "NFE (n=43k)", "NFE (n=440k)",
                "Full Dataset (n=460k)", "AFR", "ASJ", "EAS", "SAS", "NFE (n=20k)")
 
 
-PrintAUC <- function(score_cols, gene.list) {
+PrintAUC <- function(MTR, score_cols, gene.list) {
   
   df_long <- MTR %>% 
     select(c(Gene, all_of(score_cols))) |> 
@@ -60,7 +60,7 @@ PrintAUC <- function(score_cols, gene.list) {
 }
 
 
-PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
+PrintLogRegResults <- function(MTR, score_cols, gene.list, maf.threshold = 0.0005) {
   
   df_long <- MTR %>% 
     select(c(Gene, all_of(score_cols))) |> 
