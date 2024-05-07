@@ -15,11 +15,9 @@ LOF <- c("frameshift_variant", "stop_gained", "start_lost",
          "stop_gained&inframe_deletion", "frameshift_variant&stop_retained_variant")
 
 # Gene Lists
-setwd("~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS")
-dee_monoallelic <- fread("Genes/dee_monoallelic.tsv", header = F)
-asd_monoallelic <- fread("Genes/asd_monoallelic.tsv", header = F)
-dd_monoallelic <- fread("Genes/dd_monoallelic.tsv", header = F)
-
-setwd("~/Library/CloudStorage/Box-Box/RVIS/data/gene_lists")
-clingen_HI <- fread("clingen_HI.txt", header = F)
+setwd("data/genelist")
+dee_monoallelic <- fread("dee_monoallelic.tsv", header = F)
+asd_monoallelic <- fread("asd_monoallelic.tsv", header = F)
+dd_monoallelic <- fread("dd_monoallelic.tsv", header = F)
+clingen_HI <- fread("clingen_HI.tsv", header = F)
 mgi_essential <- fread("mgi_essential.tsv", header = F)
