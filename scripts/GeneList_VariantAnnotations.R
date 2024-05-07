@@ -15,7 +15,7 @@ LOF <- c("frameshift_variant", "stop_gained", "start_lost",
          "stop_gained&inframe_deletion", "frameshift_variant&stop_retained_variant")
 
 # Gene Lists
-setwd("data/genelist")
+setwd("ancestral_diversity/data/genelist")
 dee_monoallelic <- fread("dee_monoallelic.tsv", header = F)
 asd_monoallelic <- fread("asd_monoallelic.tsv", header = F)
 dd_monoallelic <- fread("dd_monoallelic.tsv", header = F)
