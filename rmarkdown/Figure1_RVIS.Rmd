@@ -12,11 +12,10 @@ library(R.utils)
 ```
 
 ```{r, echo = FALSE}
-source("~/Desktop/Scripts/GeneList_VariantAnnotations.R")
-source("~/Desktop/Scripts/gnomAD_RVIS.R")
+source("~/ancestral_diversity/scripts/GeneList_VariantAnnotations.R")
+source("~/ancestral_diversity/scripts/gnomAD_RVIS.R")
 
-gnomAD_data <- fread("ancestral_diversity/data/UKB_RVIS.csv")
-
+gnomAD_data <- fread("~/ancestral_diversity/data/UKB_RVIS.csv")
 ```
 
 # Figure 1a: gnomAD RVIS Curves
@@ -128,8 +127,6 @@ figure_1b
 # Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 delongtest
-
-write.csv(delongtest, "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS_Final/delongtest_RVIS_gnomAD.csv")
 ```
 
 # Logistic Regression gnomAD
@@ -161,15 +158,10 @@ gnomAD_RVIS_log <- gnomAD_RVIS_log %>%
   rename("Ancestry" = score)
 ```
 
-```{r}
-write.csv(gnomAD_RVIS_log, file = "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/gnomAD_log_regression.csv")
-```
-
-
 # UKBiobank
 ```{r}
-UKB_data <- fread("ancestral_diversity/data/UKB_RVIS.csv")
-source("~/Desktop/Scripts/UKB_RVIS.R")
+UKB_data <- fread("~/ancestral_diversity/data/UKB_RVIS.csv")
+source("~/ancestral_diversity/scripts/UKB_RVIS.R")
 ```
 
 # Figure 1c: UKBiobank RVIS Curves
@@ -283,8 +275,6 @@ figure_1d
 # Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 delongtest
-
-write.csv(delongtest, "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS_Final/delongtest_RVIS_UKB.csv")
 ```
 
 
@@ -315,10 +305,6 @@ UKB_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_RVIS_log <- UKB_RVIS_log %>% 
   rename("Ancestry" = score)
 UKB_RVIS_log
-```
-
-```{r}
-write.csv(UKB_RVIS_log, file = "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/UKB_log_regression.csv")
 ```
 
 ```{r}
