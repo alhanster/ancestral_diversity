@@ -6,6 +6,7 @@
 score_cols = c("rvis_afr", "rvis_amr", "rvis_eas",
                "rvis_asj", "rvis_fin", "rvis_nfe", "rvis_sas")
 
+
 colorblind_palette <- c(
   "#E69F00", # orange
   "#56B4E9", # sky blue
@@ -15,32 +16,6 @@ colorblind_palette <- c(
   "#CC79A7", # reddish purple
   "#999999"
 )
-
-CalcXY <- function(df, maf.cutoff) {
-  df.x <- df |> 
-    group_by(Gene) |> 
-    summarise(x = n()) 
-  
-  df.y <- df |> 
-    filter(Consequence %in% c(MISSENSE, LOF)) |> 
-    group_by(Gene) |>
-    summarise(
-      afr_y = sum(AF_afr > maf.cutoff, na.rm = T),
-      amr_y = sum(AF_amr > maf.cutoff, na.rm = T),
-      asj_y = sum(AF_asj > maf.cutoff, na.rm = T),
-      eas_y = sum(AF_eas > maf.cutoff, na.rm = T), 
-      fin_y = sum(AF_fin > maf.cutoff, na.rm = T),
-      nfe_y = sum(AF_nfe > maf.cutoff, na.rm = T), 
-      sas_y = sum(AF_sas > maf.cutoff, na.rm = T)
-    )
-  
-  tallies <- df.x |> 
-    left_join(df.y) %>% 
-    left_join(mutability, by = "Gene") %>% 
-    filter(!is.na(mutability))
-  
-  return(tallies)
-}
 
 CalcRVIS <- function(df, y.colname) {
   df <- df |> 
@@ -57,7 +32,7 @@ CalcRVIS <- function(df, y.colname) {
 PrintAUC <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
   
   df.tallies <- df |> 
-    CalcXY(maf.cutoff = maf.threshold)
+    select(Gene, x, afr_y, amr_y, asj_y, eas_y, fin_y, nfe_y, sas_y, mutability)
   
   # Calculate RVIS for each ancestry
   df <- df.tallies |> 
@@ -123,7 +98,7 @@ PrintAUC <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
 PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
   
   df.tallies <- df |> 
-    CalcXY(maf.cutoff = maf.threshold)
+    select(Gene, x, afr_y, amr_y, asj_y, eas_y, fin_y, nfe_y, sas_y, mutability)
   
   # Calculate RVIS for each ancestry
   df <- df.tallies |> 
