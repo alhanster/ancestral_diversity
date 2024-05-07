@@ -1,16 +1,14 @@
 ################################################################################
-# Purpose: UKB MTR                                                             #
+# Purpose: UKB LOF                                                             #
 # Author: Alexander Han                                                        #
 ################################################################################
-
 
 score_cols = c("Maximally Diverse (n=43k)", "NFE (n=43k)", "NFE (n=440k)", 
                "Full Dataset (n=460k)", "AFR", "ASJ", "EAS", "SAS", "NFE (n=20k)")
 
-
-PrintAUC <- function(score_cols, gene.list) {
+PrintAUC <- function(data, score_cols, gene.list) {
   
-  df_long <- MTR %>% 
+  df_long <- data %>% 
     select(c(Gene, all_of(score_cols))) |> 
     pivot_longer(cols = score_cols, 
                  names_to = "score_type", 
@@ -39,7 +37,6 @@ PrintAUC <- function(score_cols, gene.list) {
   auc_df <- do.call(rbind, lapply(roc_list, `[[`, "auc_df"))
   roc_df <- do.call(rbind, lapply(roc_list, `[[`, "roc_df"))
   
-  # Sort AUCs in descending order
   auc_df <- auc_df %>% 
     arrange(desc(AUC))
   
@@ -60,9 +57,9 @@ PrintAUC <- function(score_cols, gene.list) {
 }
 
 
-PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
+PrintLogRegResults <- function(data, score_cols, gene.list, maf.threshold = 0.0005) {
   
-  df_long <- MTR %>% 
+  df_long <- data %>% 
     select(c(Gene, all_of(score_cols))) |> 
     pivot_longer(cols = score_cols, 
                  names_to = "score_type", 
@@ -91,7 +88,6 @@ PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005
   auc_df <- do.call(rbind, lapply(roc_list, `[[`, "auc_df"))
   roc_df <- do.call(rbind, lapply(roc_list, `[[`, "roc_df"))
   
-  # Sort AUCs in descending order
   auc_df <- auc_df %>% 
     arrange(desc(AUC))
   
@@ -121,32 +117,21 @@ PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005
   return(log_reg_df)
 }
 
-colorblind_palette <- c(
-  "#56B4E9", # sky blue
-  "#E69F00", # orange
-  "#009E73", # bluish green
-  "#CC79A7", # reddish purple
-  "#F0E442", # yellow
-  "#0072B2", # blue
-  "#D55E00", # vermilion
-  "#999999", # light grey
-  "#66C2A5"  # turquoise
-)
 
-PrintGraph <- function(gene.list) {
+PrintGraph <- function(data, gene.list) {
   
-  MTR_AUC_gene <- MTR_AUC %>% 
+  LOF_gene <- data %>% 
     filter(`Gene List` %in% paste(gene.list)) %>% 
     arrange(AUC)
   
-  MTR_AUC_ancestry <- MTR_AUC_gene %>% 
+  LOF_ancestry <- LOF_gene %>% 
     pull(Ancestry)
   
-  MTR_AUC_gene$Ancestry <- factor(MTR_AUC_gene$Ancestry, levels = MTR_AUC_ancestry)
+  LOF_gene$Ancestry <- factor(LOF_gene$Ancestry, levels = LOF_ancestry)
   
-  figure <- ggplot(MTR_AUC_gene, aes(x = Ancestry, y = AUC, color = Ancestry)) +
+  figure <- ggplot(LOF_gene, aes(x = Ancestry, y = AUC, color = Ancestry)) +
     geom_point(shape = 15, size = 2) +
-    labs(y = "Gene-level MTR AUC Scores") +
+    labs(y = "LOF O/E AUC Scores") +
     scale_color_manual(values = c(
       "ASJ" = "#56B4E9", 
       "EAS" = "#E69F00",
@@ -159,7 +144,7 @@ PrintGraph <- function(gene.list) {
       "Full Dataset (n=460k)" = "#66C2A5")
     )+
     ggtitle(paste(gene.list))+
-    ylim(0.5,0.9)+
+    ylim(0.4,0.9)+
     theme_classic(base_size=7)+
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1), axis.title.x = element_blank(), 
           plot.title = element_text(hjust = 0.5))
