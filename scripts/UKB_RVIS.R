@@ -13,30 +13,6 @@ ukb_colorblind_palette <- c(
   "#CC79A7" # reddish purple
 )
 
-CalcXY <- function(df, maf.cutoff) {
-  df.x <- df |> 
-    group_by(Gene) |> 
-    summarise(x = n()) 
-  
-  df.y <- df |> 
-    filter(Function %in% c(MISSENSE, LOF)) |> 
-    group_by(Gene) |>
-    summarise(
-      afr_y = sum(afr_maf > maf.cutoff, na.rm = T),
-      asj_y = sum(asj_maf > maf.cutoff, na.rm = T), 
-      eas_y = sum(eas_maf > maf.cutoff, na.rm = T), 
-      nfe_y = sum(nfe_20k_maf > maf.cutoff, na.rm = T), 
-      sas_y = sum(sas_maf > maf.cutoff, na.rm = T)
-    )
-  
-  tallies <- df.x |> 
-    left_join(df.y) %>% 
-    left_join(mutability, by = "Gene") %>% 
-    filter(!is.na(mutability))
-  
-  return(tallies)
-}
-
 
 CalcRVIS <- function(df, y.colname) {
   
@@ -54,7 +30,7 @@ CalcRVIS <- function(df, y.colname) {
 PrintAUC <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
   
   df.tallies <- df |> 
-    CalcXY(maf.cutoff = maf.threshold)
+    select(Gene, x, afr_y, asj_y, eas_y, nfe_y, sas_y, mutability)
   
   # Calculate RVIS for each ancestry
   df <- df.tallies |> 
@@ -116,7 +92,7 @@ PrintAUC <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
 PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
   
   df.tallies <- df |> 
-    CalcXY(maf.cutoff = maf.threshold)
+    select(Gene, x, afr_y, asj_y, eas_y, nfe_y, sas_y, mutability)
   
   # Calculate RVIS for each ancestry
   df <- df.tallies |> 
