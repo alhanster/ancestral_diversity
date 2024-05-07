@@ -136,11 +136,11 @@ write.csv(UKB_MTR_log, file = "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/U
 
 # Figure 2: Gene-Level MTR Performances by Ancestry
 ```{r}
-a <- PrintGraph("DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
-b <- PrintGraph("DD Monoallelic\n (n=435)") + theme(legend.position = "none") + labs(y = "")
-c <- PrintGraph("ASD Monoallelic\n (n=190)") + theme(legend.position = "none") + labs(y = "")
-d <- PrintGraph("Haploinsufficient\n (n=360)") + theme(legend.position = "none") + labs(y = "")
-e <- PrintGraph("Mouse Essential\n (n=2454)") + theme(legend.position = "none") + labs(y = "")
+a <- PrintGraph(MTR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
+b <- PrintGraph(MTR_AUC, "DD Monoallelic\n (n=435)") + theme(legend.position = "none") + labs(y = "")
+c <- PrintGraph(MTR_AUC, "ASD Monoallelic\n (n=190)") + theme(legend.position = "none") + labs(y = "")
+d <- PrintGraph(MTR_AUC, "Haploinsufficient\n (n=360)") + theme(legend.position = "none") + labs(y = "")
+e <- PrintGraph(MTR_AUC, "Mouse Essential\n (n=2454)") + theme(legend.position = "none") + labs(y = "")
 
 library(patchwork)
 
