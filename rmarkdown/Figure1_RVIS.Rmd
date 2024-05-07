@@ -13,40 +13,18 @@ library(R.utils)
 
 ```{r, echo = FALSE}
 source("~/Desktop/Scripts/GeneList_VariantAnnotations.R")
-```
-
-```{r}
-gnomad.metrics <- fread("~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/Data/gnomad.v2.1.1.lof_metrics.by_gene.txt")
-
-mutability <- gnomad.metrics %>% 
-  mutate(mutability = mu_mis + mu_syn + mu_lof + mu_lof*1.25) %>%
-  rename("Gene" = gene) %>% 
-  select(Gene, mutability)
-```
-
-# gnomAD
-```{r, echo = FALSE}
-setwd("~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/Data/")
-gnomad.maf <- fread("gnomad_exomes_2.1.1.tsv.gz")
-```
-
-```{r, echo = FALSE}
-gnomad.filtered <- gnomad.maf |> 
-  filter(Transcript %in% gnomad.metrics$transcript) |> 
-  filter(Consequence %in% c(SYN, MISSENSE, LOF)) |> 
-  filter(FILTER %in% c("None"))
-```
-
-```{r}
 source("~/Desktop/Scripts/gnomAD_RVIS.R")
+
+gnomAD_data <- fread("ancestral_diversity/data/UKB_RVIS.csv")
+
 ```
 
 # Figure 1a: gnomAD RVIS Curves
 ```{r}
 # 0.0005 threshold
-df.tallies <- gnomad.filtered |>
-  CalcXY(maf.cutoff = 0.0005) %>% 
-  select(-x)
+df.tallies <- gnomAD_data |>
+  select(-x, rvis_afr, rvis_amr, rvis_eas,
+         rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y") %>% 
@@ -55,7 +33,7 @@ xy <- df.tallies |>
   rename(Ancestry = "ancestry")
 
 xy$Ancestry <- factor(xy$Ancestry, levels = c("AFR", "SAS", "AMR", "EAS", "ASJ", "NFE", "FIN"))
-  
+
 figure_1a <- xy |> 
   ggplot(aes(x=mutability, y=y, col=Ancestry)) +
   geom_point(size = 0.5, alpha = 0.5) + 
@@ -73,7 +51,7 @@ figure_1a
 ```
 
 ```{r}
-dee_results <- PrintAUC(gnomad.filtered, score_cols, dee_monoallelic)
+dee_results <- PrintAUC(gnomAD_data, score_cols, dee_monoallelic)
 dee_AUC <- dee_results$auc_df %>% 
   rename(`DEE Monoallelic\n (n=94)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -82,7 +60,7 @@ dee_delong <- dee_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-dd_results <- PrintAUC(gnomad.filtered, score_cols, dd_monoallelic)
+dd_results <- PrintAUC(gnomAD_data, score_cols, dd_monoallelic)
 dd_AUC <- dd_results$auc_df %>% 
   rename(`DD Monoallelic\n (n=435)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -91,7 +69,7 @@ dd_delong <- dd_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-asd_results <- PrintAUC(gnomad.filtered, score_cols, asd_monoallelic)
+asd_results <- PrintAUC(gnomAD_data, score_cols, asd_monoallelic)
 asd_AUC <- asd_results$auc_df %>% 
   rename(`ASD Monoallelic\n (n=190)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -100,7 +78,7 @@ asd_delong <- asd_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-mgi_results <- PrintAUC(gnomad.filtered, score_cols, mgi_essential)
+mgi_results <- PrintAUC(gnomAD_data, score_cols, mgi_essential)
 mgi_AUC <- mgi_results$auc_df %>% 
   rename(`Mouse Essential\n (n=2454)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -109,7 +87,7 @@ mgi_delong <- mgi_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-HI_results <- PrintAUC(gnomad.filtered, score_cols, clingen_HI)
+HI_results <- PrintAUC(gnomAD_data, score_cols, clingen_HI)
 HI_AUC <- HI_results$auc_df %>% 
   rename(`Haploinsufficient\n (n=360)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -147,51 +125,6 @@ figure_1b
 ```
 
 ```{r}
-# PrintGraph <- function(gene.list) {
-#   
-#   gnomAD_RVIS_AUC_gene <- gnomAD_RVIS_AUC %>% 
-#   filter(`Gene List` %in% paste(gene.list)) %>% 
-#   arrange(AUC)
-#   
-#   gnomAD_RVIS_ancestry <- gnomAD_RVIS_AUC_gene %>% 
-#   pull(Ancestry)
-#   
-#   gnomAD_RVIS_AUC_gene$Ancestry <- factor(gnomAD_RVIS_AUC_gene$Ancestry, levels = gnomAD_RVIS_ancestry)
-#   
-#   figure <- ggplot(gnomAD_RVIS_AUC_gene, aes(x = Ancestry, y = AUC, color = Ancestry)) +
-#   geom_point(shape = 15, size = 3) +
-#   labs(y = "AUC Scores") +
-#   scale_color_manual(values = c(
-#     "AFR" = "#E69F00",
-#     "SAS" = "#56B4E9",
-#     "AMR" = "#009E73",
-#     "EAS" = "#0072B2",
-#     "ASJ" = "#D55E00",
-#     "NFE" = "#CC79A7",
-#     "FIN" = "#999999"))+
-#   ggtitle(paste(gene.list))+
-#   ylim(0.6,0.95)+
-#   theme_classic(base_size=7)+
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1), axis.title.x = element_blank(), 
-#         plot.title = element_text(hjust = 0.5))
-#   
-#   figure
-# }
-# 
-# a <- PrintGraph("DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
-# b <- PrintGraph("DD Monoallelic\n (n=435)") + theme(legend.position = "none") + labs(y = "")
-# c <- PrintGraph("ASD Monoallelic\n (n=190)") + theme(legend.position = "none") + labs(y = "")
-# d <- PrintGraph("Haploinsufficient\n (n=360)") + theme(legend.position = "none") + labs(y = "")
-# e <- PrintGraph("Mouse Essential\n (n=2454)") + theme(legend.position = "none") + labs(y = "")
-# 
-# library(patchwork)
-# 
-# figure_1b <- (a|b|c|d|e)
-# 
-# figure_1b
-```
-
-```{r}
 # Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 delongtest
@@ -201,23 +134,23 @@ write.csv(delongtest, "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS_Final/del
 
 # Logistic Regression gnomAD
 ```{r}
-dee_AUC <- PrintLogRegResults(gnomad.filtered, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(gnomad.filtered, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(gnomad.filtered, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(gnomad.filtered, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(gnomAD_data, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(gnomad.filtered, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(gnomAD_data, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 ```
@@ -235,30 +168,16 @@ write.csv(gnomAD_RVIS_log, file = "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RV
 
 # UKBiobank
 ```{r}
-data <- read_csv("~/Library/CloudStorage/Box-Box/RVIS/data/UKB/maximally_diverse_ancestry_specific_mafs/new_compiled_mafs.csv")
-```
-
-```{r}
-data <- data[,-1]
-```
-
-```{r, echo = FALSE}
-data.filtered <- data |> 
-  filter(Function %in% c(SYN, MISSENSE, LOF)) %>% 
-  mutate(Gene = gsub("'", "", `Gene Name`)) %>% 
-  select(-`Gene Name`)
-```
-
-```{r}
+UKB_data <- fread("ancestral_diversity/data/UKB_RVIS.csv")
 source("~/Desktop/Scripts/UKB_RVIS.R")
 ```
 
 # Figure 1c: UKBiobank RVIS Curves
 ```{r}
 # 0.0005 threshold
-df.tallies <- data.filtered |>
-  CalcXY(maf.cutoff = 0.0005) %>% 
-  select(-x)
+df.tallies <- gnomAD_data |>
+  select(-x, rvis_afr, rvis_amr, rvis_eas,
+         rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y")%>% 
@@ -286,7 +205,7 @@ figure_1c
 
 
 ```{r}
-dee_results <- PrintAUC(data.filtered, score_cols, dee_monoallelic)
+dee_results <- PrintAUC(UKB_data, score_cols, dee_monoallelic)
 dee_AUC <- dee_results$auc_df %>% 
   rename(`DEE Monoallelic\n (n=94)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -295,7 +214,7 @@ dee_delong <- dee_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-dd_results <- PrintAUC(data.filtered, score_cols, dd_monoallelic)
+dd_results <- PrintAUC(UKB_data, score_cols, dd_monoallelic)
 dd_AUC <- dd_results$auc_df %>% 
   rename(`DD Monoallelic\n (n=435)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -304,7 +223,7 @@ dd_delong <- dd_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-asd_results <- PrintAUC(data.filtered, score_cols, asd_monoallelic)
+asd_results <- PrintAUC(UKB_data, score_cols, asd_monoallelic)
 asd_AUC <- asd_results$auc_df %>% 
   rename(`ASD Monoallelic\n (n=190)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -313,7 +232,7 @@ asd_delong <- asd_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-mgi_results <- PrintAUC(data.filtered, score_cols, mgi_essential)
+mgi_results <- PrintAUC(UKB_data, score_cols, mgi_essential)
 mgi_AUC <- mgi_results$auc_df %>% 
   rename(`Mouse Essential\n (n=2454)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -322,7 +241,7 @@ mgi_delong <- mgi_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 
-HI_results <- PrintAUC(data.filtered, score_cols, clingen_HI)
+HI_results <- PrintAUC(UKB_data, score_cols, clingen_HI)
 HI_AUC <- HI_results$auc_df %>% 
   rename(`Haploinsufficient\n (n=360)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -360,51 +279,6 @@ figure_1d <- ggplot(UKBiobank_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = An
 figure_1d
 ```
 
-
-```{r}
-# PrintGraph <- function(gene.list) {
-#   
-#   UKBiobank_RVIS_AUC_gene <- UKBiobank_RVIS_AUC %>% 
-#   filter(`Gene List` %in% paste(gene.list)) %>% 
-#   arrange(AUC)
-#   
-#   UKBiobank_RVIS_ancestry <- UKBiobank_RVIS_AUC_gene %>% 
-#   pull(Ancestry)
-#   
-#   UKBiobank_RVIS_AUC_gene$Ancestry <- factor(UKBiobank_RVIS_AUC_gene$Ancestry, levels = UKBiobank_RVIS_ancestry)
-#   
-#   figure <- ggplot(UKBiobank_RVIS_AUC_gene, aes(x = Ancestry, y = AUC, color = Ancestry)) +
-#   geom_point(shape = 15, size = 3) +
-#   labs(y = "AUC Scores") +
-#   scale_color_manual(values = c(
-#     "AFR" = "#E69F00",
-#     "SAS" = "#56B4E9",
-#     "EAS" = "#0072B2",
-#     "ASJ" = "#D55E00",
-#     "NFE" = "#CC79A7"))+
-#   ggtitle(paste(gene.list))+
-#   ylim(0.6,0.95)+
-#   theme_classic(base_size=7)+
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1), axis.title.x = element_blank(), 
-#         plot.title = element_text(hjust = 0.5))
-#   
-#   figure
-# }
-# 
-# a <- PrintGraph("DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
-# b <- PrintGraph("DD Monoallelic\n (n=435)") + theme(legend.position = "none") + labs(y = "")
-# c <- PrintGraph("ASD Monoallelic\n (n=190)") + theme(legend.position = "none") + labs(y = "")
-# d <- PrintGraph("Haploinsufficient\n (n=360)") + theme(legend.position = "none") + labs(y = "")
-# e <- PrintGraph("Mouse Essential\n (n=2454)") + theme(legend.position = "none") + labs(y = "")
-# 
-# library(patchwork)
-# 
-# figure_1d <- (a|b|c|d|e)
-# 
-# figure_1d
-```
-
-
 ```{r}
 # Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
@@ -415,35 +289,23 @@ write.csv(delongtest, "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS_Final/del
 
 
 ```{r}
-library(patchwork)
-
-patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm")))| figure_1b) / (figure_1c + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm"))) | figure_1d) + plot_annotation(tag_levels = 'A')
-
-patch
-```
-
-```{r}
-ggsave("figure1.pdf", plot = patch, width = 174, height = 116, units = "mm")
-```
-
-```{r}
-dee_AUC <- PrintLogRegResults(data.filtered, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(data.filtered, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(UKB_data, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(data.filtered, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(UKB_data, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(data.filtered, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(UKB_data, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(data.filtered, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 ```
@@ -457,6 +319,18 @@ UKB_RVIS_log
 
 ```{r}
 write.csv(UKB_RVIS_log, file = "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/UKB_log_regression.csv")
+```
+
+```{r}
+library(patchwork)
+
+patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm")))| figure_1b) / (figure_1c + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm"))) | figure_1d) + plot_annotation(tag_levels = 'A')
+
+patch
+```
+
+```{r}
+ggsave("figure1.pdf", plot = patch, width = 174, height = 116, units = "mm")
 ```
 
 
