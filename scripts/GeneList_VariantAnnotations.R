@@ -3,6 +3,11 @@
 # Author: Alexander Han                                                        #
 ################################################################################
 
+library(tidyverse)
+library(data.table)
+library(ggplot2)
+library(R.utils)
+
 # Variant Annotations
 SYN <- c("synonymous_variant")
 MISSENSE <- c("missense_variant", "inframe_deletion", "inframe_insertion")
