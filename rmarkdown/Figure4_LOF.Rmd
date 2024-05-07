@@ -17,47 +17,13 @@ setwd("~/Library/CloudStorage/Box-Box/RVIS/")
 ```
 
 ```{r}
-source("~/Desktop/Scripts/Compiling_UKB_Data.R")
-```
-
-```{r, echo = FALSE}
-data.filtered <- data |>
-  filter(Function %in% c(SYN, MISSENSE, LOF)) %>% 
-  mutate(Maximally_Diverse = ifelse(is.na(diverse_maf), 0, 1)) %>% 
-  mutate(nfe_43k = ifelse(is.na(nfe_only_43k_maf), 0, 1)) %>% 
-  mutate(nfe_440k = ifelse(is.na(nfe_only_440k_maf), 0, 1)) %>% 
-  mutate(all = ifelse(Maximally_Diverse == 1 | nfe_440k == 1, 1, 0)) %>% 
-  mutate(afr_MAF = ifelse(is.na(`afr MAF`), 0, 1)) %>% 
-  mutate(asj_MAF = ifelse(is.na(`asj MAF`), 0, 1)) %>% 
-  mutate(eas_MAF = ifelse(is.na(`eas MAF`), 0, 1)) %>% 
-  mutate(sas_MAF = ifelse(is.na(`sas MAF`), 0, 1)) %>% 
-  mutate(nfe_20k_MAF = ifelse(is.na(`nfe_20k MAF`), 0, 1))
+source("~/Desktop/Scripts/UKB_LOF.R")
+data <- fread(ancestral_diversity/data/UKB_LOF_OE.csv)
 ```
 
 ```{r}
-ptv <- data.filtered %>% 
-  group_by(Gene) %>% 
-  filter(Function %in% LOF) %>%
-  summarize(Diverse_LOF = sum(Maximally_Diverse, na.rm = T), 
-            Nfe_43k_LOF = sum(nfe_43k, na.rm = T),
-            Nfe_440k_LOF = sum(nfe_440k, na.rm = T),
-            All_LOF = sum(all, na.rm = T),
-            afr_LOF = sum(afr_MAF, na.rm = T), 
-            asj_LOF = sum(asj_MAF, na.rm = T),
-            eas_LOF = sum(eas_MAF, na.rm = T),
-            sas_LOF = sum(sas_MAF, na.rm = T),
-            nfe_20k_LOF = sum(nfe_20k_MAF, na.rm = T)
-            ) %>% 
-  arrange(Gene)
-```
-
-```{r}
-pos <- gnomad.metrics %>% 
-  select(gene, possible_lof, mu_mis, mu_syn, mu_lof) %>% 
-  rename("Gene" = gene)
-
-df <- ptv %>% 
-  left_join(pos, by = "Gene")
+df <- data |>
+  -select(LOF_OE_Diverse43k, LOF_OE_NFE43k, LOF_OE_NFE440k, LOF_OE_FullDataset, LOF_OE_AFR, LOF_OE_ASJ, LOF_OE_EAS, LOF_OE_SAS, LOF_OE_NFE20k)
 ```
 
 ```{r}
@@ -75,31 +41,6 @@ LOF_OE <- df %>%
     `NFE (n=20k)` = nfe_20k_LOF / (possible_lof + possible_lof*1.25)
   ) %>%
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, AFR, ASJ, EAS, SAS, `NFE (n=20k)`)
-```
-
-
-```{r}
-LOF_OE_combined <- df %>%
-  mutate(
-    LOF_OE_Diverse43k = Diverse_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_NFE43k = Nfe_43k_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_NFE440k = Nfe_440k_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_FullDataset = All_LOF / (possible_lof + possible_lof*1.25),
-    
-    LOF_OE_AFR = afr_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_ASJ = asj_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_EAS = eas_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_SAS = sas_LOF / (possible_lof + possible_lof*1.25),
-    LOF_OE_NFE20k = nfe_20k_LOF / (possible_lof + possible_lof*1.25)
-  )
-```
-
-```{r}
-write.csv(LOF_OE_combined, "LOF_OE_Score.csv", row.names = FALSE)
-```
-
-```{r}
-source("~/Desktop/Scripts/UKB_LOF.R")
 ```
 
 ```{r}
@@ -210,13 +151,10 @@ patch1 <- (a|b|c|d|e)
 patch1
 ```
 
-```{r}
-total_var <- data.filtered %>% 
-  group_by(Gene) %>% 
-  summarize(total_var = n())
-
-df <- df %>% 
-  left_join(total_var, by = "Gene")
+```
+data <- fread(ancestral_diversity/data/UKB_LOF_FDR.csv)
+df <- data |>
+  -select(LOF_FDR_Diverse43k, LOF_FDR_NFE43k, LOF_FDR_NFE440k, LOF_FDR_FullDataset, LOF_FDR_AFR, LOF_FDR_ASJ, LOF_FDR_EAS, LOF_FDR_SAS, LOF_FDR_NFE20k)
 ```
 
 ```{r}
@@ -234,27 +172,6 @@ LOF_FDR <- df %>%
     `NFE (n=20k)` = (nfe_20k_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis))
   ) %>%
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, AFR, ASJ, EAS, SAS, `NFE (n=20k)`)
-```
-
-
-```{r}
-LOF_FDR_combined <- df %>%
-  mutate(
-    LOF_FDR_Diverse43k = (Diverse_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)) ,
-    LOF_FDR_NFE43k = (Nfe_43k_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)),
-    LOF_FDR_NFE440k = (Nfe_440k_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)),
-    LOF_FDR_FullDataset = (All_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)),
-    
-    LOF_FDR_AFR = (afr_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)) ,
-    LOF_FDR_ASJ = (asj_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)),
-    LOF_FDR_EAS = (eas_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)),
-    LOF_FDR_SAS = (sas_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis)),
-    LOF_FDR_NFE20k = (nfe_20k_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis))
-  )
-```
-
-```{r}
-write.csv(LOF_FDR_combined, "LOF_FDR_Score.csv", row.names = FALSE)
 ```
 
 
