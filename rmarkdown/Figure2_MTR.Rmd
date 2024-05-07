@@ -17,69 +17,14 @@ knitr::opts_knit$set(root.dir = "~/Library/CloudStorage/Box-Box/RVIS/")
 setwd("~/Library/CloudStorage/Box-Box/RVIS/")
 ```
 
-
-
-
 ```{r}
-source("~/Desktop/Scripts/Compiling_UKB_Data.R")
+data <- fread(ancestral_diversity/data/UKB_MTR.csv)
+source("~/Desktop/Scripts/UKB_MTR.R")
 ```
 
 ```{r, echo = FALSE}
-data.filtered <- data |>
-  filter(Function %in% c(SYN, MISSENSE, LOF)) %>% 
-  mutate(Maximally_Diverse = ifelse(is.na(diverse_maf), 0, 1)) %>% 
-  mutate(nfe_43k = ifelse(is.na(nfe_only_43k_maf), 0, 1)) %>% 
-  mutate(nfe_440k = ifelse(is.na(nfe_only_440k_maf), 0, 1)) %>% 
-  mutate(all = ifelse(Maximally_Diverse == 1 | nfe_440k == 1, 1, 0)) %>% 
-  mutate(afr_MAF = ifelse(is.na(`afr MAF`), 0, 1)) %>% 
-  mutate(asj_MAF = ifelse(is.na(`asj MAF`), 0, 1)) %>% 
-  mutate(eas_MAF = ifelse(is.na(`eas MAF`), 0, 1)) %>% 
-  mutate(sas_MAF = ifelse(is.na(`sas MAF`), 0, 1)) %>% 
-  mutate(nfe_20k_MAF = ifelse(is.na(`nfe_20k MAF`), 0, 1))
-```
-
-```{r}
-mis <- data.filtered %>% 
-  group_by(Gene) %>% 
-  filter(Function %in% MISSENSE) %>%
-  summarize(Diverse_mis = sum(Maximally_Diverse, na.rm = T), 
-            Nfe_43k_mis = sum(nfe_43k, na.rm = T),
-            Nfe_440k_mis = sum(nfe_440k, na.rm = T),
-            All_mis = sum(all, na.rm = T),
-            afr_mis = sum(afr_MAF, na.rm = T), 
-            asj_mis = sum(asj_MAF, na.rm = T),
-            eas_mis = sum(eas_MAF, na.rm = T),
-            sas_mis = sum(sas_MAF, na.rm = T),
-            nfe_20k_mis = sum(nfe_20k_MAF, na.rm = T)
-            ) %>% 
-  arrange(Gene)
-
-syn <- data.filtered %>% 
-  group_by(Gene) %>% 
-  filter(Function %in% SYN) %>%
-  summarize(Diverse_syn = sum(Maximally_Diverse, na.rm = T), 
-            Nfe_43k_syn = sum(nfe_43k, na.rm = T),
-            Nfe_440k_syn = sum(nfe_440k, na.rm = T),
-            All_syn = sum(all, na.rm = T),
-            afr_syn = sum(afr_MAF, na.rm = T), 
-            asj_syn = sum(asj_MAF, na.rm = T),
-            eas_syn = sum(eas_MAF, na.rm = T),
-            sas_syn = sum(sas_MAF, na.rm = T),
-            nfe_20k_syn = sum(nfe_20k_MAF, na.rm = T)
-            ) %>% 
-  arrange(Gene)
-
-df <- mis %>% 
-  left_join(syn, by = "Gene")
-```
-
-```{r}
-pos <- gnomad.metrics %>% 
-  select(gene, possible_mis, possible_syn) %>% 
-  rename("Gene" = gene)
-
-df <- df %>% 
-  left_join(pos, by = "Gene")
+df <- df |>
+  -select(MTR_Diverse43k, MTR_NFE43k, MTR_NFE440k, MTR_FullDataset, MTR_AFR, MTR_ASJ, MTR_EAS, MTR_SAS, MTR_NFE20k)
 ```
 
 ```{r}
@@ -99,13 +44,9 @@ MTR <- df %>%
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, `AFR`, `ASJ`, `EAS`, `SAS`, `NFE (n=20k)`)
 ```
 
-```{r}
-source("~/Desktop/Scripts/UKB_MTR.R")
-```
-
 
 ```{r}
-dee_results <- PrintAUC(score_cols, dee_monoallelic)
+dee_results <- PrintAUC(MTR, score_cols, dee_monoallelic)
 dee_AUC <- dee_results$auc_df %>% 
   rename(`DEE Monoallelic\n (n=94)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -114,7 +55,7 @@ dee_delong <- dee_results$delong_results %>%
   select(Gene_List, Score1, Score2, De.Long.P.val)
 
 
-dd_results <- PrintAUC(score_cols, dd_monoallelic)
+dd_results <- PrintAUC(MTR, score_cols, dd_monoallelic)
 dd_AUC <- dd_results$auc_df %>% 
   rename(`DD Monoallelic\n (n=435)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -122,7 +63,7 @@ dd_delong <- dd_results$delong_results %>%
   mutate(Gene_List = "DD Monoallelic") %>% 
   select(Gene_List, Score1, Score2, De.Long.P.val)
 
-asd_results <- PrintAUC(score_cols, asd_monoallelic)
+asd_results <- PrintAUC(MTR, score_cols, asd_monoallelic)
 asd_AUC <- asd_results$auc_df %>% 
   rename(`ASD Monoallelic\n (n=190)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -131,7 +72,7 @@ asd_delong <- asd_results$delong_results %>%
   select(Gene_List, Score1, Score2, De.Long.P.val)
 
 
-mgi_results <- PrintAUC(score_cols, mgi_essential)
+mgi_results <- PrintAUC(MTR, score_cols, mgi_essential)
 mgi_AUC <- mgi_results$auc_df %>% 
   rename(`Mouse Essential\n (n=2454)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -140,7 +81,7 @@ mgi_delong <- mgi_results$delong_results %>%
   select(Gene_List, Score1, Score2, De.Long.P.val)
 
 
-HI_results <- PrintAUC(score_cols, clingen_HI)
+HI_results <- PrintAUC(MTR, score_cols, clingen_HI)
 HI_AUC <- HI_results$auc_df %>% 
   rename(`Haploinsufficient\n (n=360)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
@@ -161,25 +102,24 @@ delongtest
 write.csv(delongtest, "MTR_Score_DeLong_test.csv", row.names = FALSE)
 ```
 
-
 ```{r}
-dee_AUC <- PrintLogRegResults(data.filtered, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(MTR, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(data.filtered, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(MTR, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(data.filtered, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(MTR, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(data.filtered, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(MTR, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(data.filtered, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(MTR, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 ```
@@ -193,8 +133,6 @@ UKB_MTR_log <- UKB_MTR_log %>%
 ```{r}
 write.csv(UKB_MTR_log, file = "~/Library/CloudStorage/Box-Box/Dhindsa Lab/RVIS/UKB_MTR_log_regression.csv")
 ```
-
-
 
 # Figure 2: Gene-Level MTR Performances by Ancestry
 ```{r}
@@ -211,27 +149,7 @@ patch <- (a|b|c|d|e)
 patch
 ```
 
-
 ```{r}
 ggsave("Figure2_MTR.pdf", plot = patch, width = 174, height = 87, units = "mm")
 ```
 
-```{r}
-MTR_combined <- df %>%
-  mutate(
-    MTR_Diverse43k = (Diverse_mis/(Diverse_mis + Diverse_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_NFE43k = (Nfe_43k_mis/(Nfe_43k_mis + Nfe_43k_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_NFE440k = (Nfe_440k_mis/(Nfe_440k_mis + Nfe_440k_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_FullDataset = (All_mis/(All_mis + All_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    
-    MTR_AFR = (afr_mis/(afr_mis + afr_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_ASJ = (asj_mis/(asj_mis + asj_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_EAS = (eas_mis/(eas_mis + eas_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_SAS = (sas_mis/(sas_mis + sas_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    MTR_NFE20k = (nfe_20k_mis/(nfe_20k_mis + nfe_20k_syn)) / (possible_mis/(possible_mis + possible_syn))
-  )
-```
-
-```{r}
-write.csv(MTR_combined, "MTR_Score.csv", row.names = FALSE)
-```
