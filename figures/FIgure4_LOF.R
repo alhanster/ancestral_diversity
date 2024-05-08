@@ -17,7 +17,7 @@ data <- fread("data/UKB_LOF_OE.csv")
 
 
 df <- data |>
-  -select(LOF_OE_Diverse43k, LOF_OE_NFE43k, LOF_OE_NFE440k, LOF_OE_FullDataset, LOF_OE_AFR, LOF_OE_ASJ, LOF_OE_EAS, LOF_OE_SAS, LOF_OE_NFE20k)
+  select(-LOF_OE_Diverse43k, -LOF_OE_NFE43k, -LOF_OE_NFE440k, -LOF_OE_FullDataset, -LOF_OE_AFR, -LOF_OE_ASJ, -LOF_OE_EAS, -LOF_OE_SAS, -LOF_OE_NFE20k)
 
 
 # Computing LOF O/E
@@ -130,7 +130,7 @@ patch1 <- (a|b|c|d|e)
 data <- fread("data/UKB_LOF_FDR.csv")
 
 df <- data |>
-  -select(LOF_FDR_Diverse43k, LOF_FDR_NFE43k, LOF_FDR_NFE440k, LOF_FDR_FullDataset, LOF_FDR_AFR, LOF_FDR_ASJ, LOF_FDR_EAS, LOF_FDR_SAS, LOF_FDR_NFE20k)
+  select(-LOF_FDR_Diverse43k, -LOF_FDR_NFE43k, -LOF_FDR_NFE440k, -LOF_FDR_FullDataset, -LOF_FDR_AFR, -LOF_FDR_ASJ, -LOF_FDR_EAS, -LOF_FDR_SAS, -LOF_FDR_NFE20k)
 
 
 # Computing LOF FDR
