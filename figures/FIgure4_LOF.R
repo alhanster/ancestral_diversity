@@ -13,7 +13,7 @@ source("scripts/GeneList_VariantAnnotations.R")
 source("~/Desktop/Scripts/UKB_LOF.R")
 
 # Loading UKB Data for LOF O/E
-data <- fread(ancestral_diversity/data/UKB_LOF_OE.csv)
+data <- fread("data/UKB_LOF_OE.csv")
 
 
 df <- data |>
@@ -127,7 +127,7 @@ patch1 <- (a|b|c|d|e)
 
 
 # Loading UKB Data for LOF FDR
-data <- fread(ancestral_diversity/data/UKB_LOF_FDR.csv)
+data <- fread("data/UKB_LOF_FDR.csv")
 
 df <- data |>
   -select(LOF_FDR_Diverse43k, LOF_FDR_NFE43k, LOF_FDR_NFE440k, LOF_FDR_FullDataset, LOF_FDR_AFR, LOF_FDR_ASJ, LOF_FDR_EAS, LOF_FDR_SAS, LOF_FDR_NFE20k)
