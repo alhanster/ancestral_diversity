@@ -13,7 +13,7 @@ source("scripts/GeneList_VariantAnnotations.R")
 source("~/Desktop/Scripts/UKB_MTR.R")
 
 # Loading UKB Data
-data <- fread(ancestral_diversity/data/UKB_MTR.csv)
+data <- fread("data/UKB_MTR.csv")
 
 df <- data |>
   -select(MTR_Diverse43k, MTR_NFE43k, MTR_NFE440k, MTR_FullDataset, MTR_AFR, MTR_ASJ, MTR_EAS, MTR_SAS, MTR_NFE20k)
