@@ -80,12 +80,8 @@ HI_delong <- HI_results$delong_results %>%
 MTR_AUC <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 MTR_AUC <- MTR_AUC %>% 
   rename("Ancestry" = score)
-MTR_AUC
 
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-delongtest
-
-write.csv(delongtest, "MTR_Score_DeLong_test.csv", row.names = FALSE)
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(MTR, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
