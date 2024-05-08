@@ -16,9 +16,3 @@ install.packages("data.table") <br>
 install.packages("R.utils") <br>
 install.packages("pROC") <br>
 
-
-
-
-....
-
-....
