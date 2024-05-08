@@ -13,7 +13,7 @@ source("scripts/GeneList_VariantAnnotations.R")
 source("scripts/gnomAD_RVIS.R")
 
 # Loading gnomAD Data
-gnomAD_data <- read.csv("data/UKB_RVIS.csv")
+gnomAD_data <- fread("data/gnomAD_RVIS.csv")
 
 # Figure 1A: gnomAD RVIS Curves
 df.tallies <- gnomAD_data |>
