@@ -24,4 +24,14 @@ Figure2_MTR.R computes MTR in UKB cohorts. Logistic Regression is performed to e
 
 Figure4_LOF.R computes LOF O/E and LOF FDR in UKB cohorts. Logistic Regression is performed to evaluate how LOF O/E and LOF FDR can be used to determine genes in disease implicated gene lists. DeLong test is used to determine whether difference between AUC values are statistically significant.  <br>
 
+# Scripts
+
+GeneList_VariantAnnotations.R includes variant annotations and pulls gene lists.
+
+UKB_RVIS.R and gnomAD_RVIS.R include functions for calculating RVIS, logistic regression, and DeLong test. It also includes a function for graphing Figure 1 from our paper.
+
+UKB_MTR.R and UKB_LOF.R include functions for logistic regression and DeLong test. It also includes a function for graphing Figure 2 and Figure 4 from our paper.
+
+
+
 
