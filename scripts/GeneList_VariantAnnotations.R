@@ -7,6 +7,7 @@ library(tidyverse)
 library(data.table)
 library(ggplot2)
 library(R.utils)
+library(pROC)
 
 # Variant Annotations
 SYN <- c("synonymous_variant")

@@ -10,7 +10,7 @@ setwd()
 source("scripts/GeneList_VariantAnnotations.R")
 
 # Pull Functions for UKB MTR Computation, Logistic Regression, DeLong Test
-source("~/Desktop/Scripts/UKB_MTR.R")
+source("scripts/UKB_MTR.R")
 
 # Loading UKB Data
 data <- fread("data/UKB_MTR.csv")
