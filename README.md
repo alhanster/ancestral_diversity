@@ -7,6 +7,9 @@ After downloading the repository as zip file, expand the file and paste the path
 
 # Dependencies
 This package depends on the following R packages:
+
 install.packages("ggplot2")
+
 ....
+
 ....
