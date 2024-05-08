@@ -9,12 +9,12 @@ After downloading the repository as zip file, expand the file and paste the path
 # Dependencies
 This package depends on the following R packages:
 
-install.packages("ggplot2") \n
-install.packages("patchwork") \n
-install.packages("tidyverse") \n
-install.packages("data.table") \n
-install.packages("R.utils") \n
-install.packages("pROC") \n
+install.packages("ggplot2") <br>
+install.packages("patchwork") <br>
+install.packages("tidyverse") <br>
+install.packages("data.table") <br>
+install.packages("R.utils") <br>
+install.packages("pROC") <br>
 
 
 
