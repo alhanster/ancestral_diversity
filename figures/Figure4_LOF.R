@@ -229,7 +229,7 @@ UKB_LOF_FDR_log <- UKB_LOF_FDR_log %>%
 
 
 # Figure 4B: UKB LOF FDR Performances by Ancestry
-a <- PrintGraph(LOF_FDR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
+a <- PrintGraph(LOF_FDR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") + labs(y = "LOF-FDR AUC Scores")
 b <- PrintGraph(LOF_FDR_AUC, "DD Monoallelic\n (n=435)") + theme(legend.position = "none") + labs(y = "")
 c <- PrintGraph(LOF_FDR_AUC, "ASD Monoallelic\n (n=190)") + theme(legend.position = "none") + labs(y = "")
 d <- PrintGraph(LOF_FDR_AUC, "Haploinsufficient\n (n=360)") + theme(legend.position = "none") + labs(y = "")
