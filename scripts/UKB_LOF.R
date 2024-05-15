@@ -6,23 +6,6 @@
 score_cols = c("Maximally Diverse (n=43k)", "NFE (n=43k)", "NFE (n=440k)", 
                "Full Dataset (n=460k)", "AFR", "ASJ", "EAS", "SAS", "NFE (n=20k)")
 
-# LOF Variant Annotations for LOF O/E
-LOF_SNV <- c("stop_gained", "start_lost", 
-         "splice_acceptor_variant", "splice_donor_variant",
-         "splice_donor_variant&coding_sequence_variant&intron_variant", 
-         "splice_donor_variant&intron_variant", 
-         "start_lost&splice_region_variant", 
-         "stop_gained&protein_altering_variant")
-
-# LOF Variant Annotations for LOF-FDR
-LOF <- c("frameshift_variant", "stop_gained", "start_lost", 
-         "splice_acceptor_variant", "splice_donor_variant",
-         "stop_gained&frameshift_variant", "splice_donor_variant&coding_sequence_variant&intron_variant", 
-         "splice_donor_variant&intron_variant", "stop_gained&inframe_insertion", "frameshift_variant&stop_lost", 
-         "frameshift_variant&start_lost", "start_lost&splice_region_variant", 
-         "stop_gained&protein_altering_variant", "stop_gained&frameshift_variant&splice_region_variant", 
-         "stop_gained&inframe_deletion", "frameshift_variant&stop_retained_variant")
-
 PrintAUC <- function(data, score_cols, gene.list) {
   
   df_long <- data %>% 
