@@ -23,15 +23,15 @@ df <- data |>
 # Computing LOF O/E
 LOF_OE <- df %>%
   mutate(
-    `Maximally Diverse (n=43k)` = Diverse_LOF / possible_lof,
-    `NFE (n=43k)` = Nfe_43k_LOF / possible_lof,
-    `NFE (n=440k)` = Nfe_440k_LOF / possible_lof,
-    `Full Dataset (n=460k)` = All_LOF / possible_lof,
-    AFR = afr_LOF / possible_lof,
-    ASJ = asj_LOF / possible_lof,
-    EAS = eas_LOF / possible_lof,
-    SAS = sas_LOF / possible_lof,
-    `NFE (n=20k)` = nfe_20k_LOF / possible_lof
+    `Maximally Diverse (n=43k)` = Diverse_LOF_SNV / possible_lof,
+    `NFE (n=43k)` = Nfe_43k_LOF_SNV / possible_lof,
+    `NFE (n=440k)` = Nfe_440k_LOF_SNV / possible_lof,
+    `Full Dataset (n=460k)` = All_LOF_SNV / possible_lof,
+    AFR = afr_LOF_SNV / possible_lof,
+    ASJ = asj_LOF_SNV / possible_lof,
+    EAS = eas_LOF_SNV / possible_lof,
+    SAS = sas_LOF_SNV / possible_lof,
+    `NFE (n=20k)` = nfe_20k_LOF_SNV / possible_lof
   ) %>%
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, 
          AFR, ASJ, EAS, SAS, `NFE (n=20k)`)
