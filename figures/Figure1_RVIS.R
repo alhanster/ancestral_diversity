@@ -30,9 +30,11 @@ xy$Ancestry <- factor(xy$Ancestry, levels = c("AFR", "SAS", "AMR", "EAS", "ASJ",
 
 figure_1a <- xy |> 
   ggplot(aes(x=mutability, y=y, col=Ancestry)) +
-  geom_point(size = 0.5, alpha = 0.5) + 
+  geom_point(size = 0.5, alpha = 0.1) + 
   geom_smooth(method = "lm", se = FALSE, size = 0.5) +
-  coord_cartesian(xlim = c(0, 0.0015), ylim = c(0, 450)) + 
+  ylim(c(0, 400)) +
+  xlim(c(0, 0.0005)) +
+  coord_cartesian(xlim = c(0, 0.0003), ylim = c(0, 120)) + 
   xlab("Mutability") + 
   ylab("Common (MAF>0.05%) \n functional variants")+
   scale_color_manual(values = colorblind_palette)+
@@ -160,9 +162,11 @@ xy$Ancestry <- factor(xy$Ancestry, levels = c("AFR", "SAS", "EAS", "ASJ", "NFE")
 
 figure_1c <- xy |> 
   ggplot(aes(x=mutability, y=y, col=Ancestry)) +
-  geom_point(size = 0.5, alpha = 0.5) + 
+  geom_point(size = 0.5, alpha = 0.1) + 
   geom_smooth(method = "lm", se = FALSE, size = 0.5) + 
-  coord_cartesian(xlim = c(0, 0.0015), ylim = c(0, 450)) + 
+  ylim(c(0, 400)) +
+  xlim(c(0, 0.0005)) +
+  coord_cartesian(xlim = c(0, 0.0003), ylim = c(0, 120)) + 
   xlab("Mutability") + 
   ylab("Common (MAF>0.05%) \n functional variants")+
   scale_color_manual(values = ukb_colorblind_palette)+
