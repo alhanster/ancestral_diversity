@@ -254,5 +254,5 @@ figure4b <- patch2 + plot_annotation('B')
 
 
 # Saving Figures as PDFs
-ggsave("Figure4a.pdf", plot = figure4a, path = "output", width = 174, height = 87, units = "mm")
-ggsave("Figure4b.pdf", plot = figure4b, path = "output", width = 174, height = 87, units = "mm")
+ggsave("figure4a.pdf", plot = figure4a, path = "output", width = 174, height = 87, units = "mm")
+ggsave("figure4b.pdf", plot = figure4b, path = "output", width = 174, height = 87, units = "mm")
