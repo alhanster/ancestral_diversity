@@ -7,7 +7,7 @@ These intolerance metrics were calculated using using two large whole-exome sequ
 For questions, contact alh16@rice.edu.
 
 # Usage
-After downloading the repository, expand the file and run the following command lines.
+After downloading the repository, expand the file and run the following command lines. Tables and figures will be added to output.
 ```
 cd ancestry_diversity
 Rscript figures/Figure1_RVIS.R
