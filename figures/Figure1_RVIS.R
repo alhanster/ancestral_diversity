@@ -20,6 +20,21 @@ df.tallies <- gnomAD_data |>
   select(-x, rvis_afr, rvis_amr, rvis_eas,
          rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
 
+
+# Calculate RVIS for each ancestry
+UKB_RVIS <- df.tallies |> 
+    mutate( 
+      rvis_afr = CalcRVIS(df.tallies, "afr_y"),
+      rvis_eas = CalcRVIS(df.tallies, "eas_y"),
+      rvis_asj = CalcRVIS(df.tallies, "asj_y"),
+      rvis_nfe = CalcRVIS(df.tallies, "nfe_y"),
+      rvis_sas = CalcRVIS(df.tallies, "sas_y"),
+      rvis_amr = CalcRVIS(df.tallies, "amr_y"),
+      rvis_fin = CalcRVIS(df.tallies, "fin_y")
+    )
+
+write.csv(UKB_RVIS, "output/RVIS/UKB_RVIS_Score")
+
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y") %>% 
   filter(ancestry %in% c("afr_y", "sas_y", "amr_y","eas_y", "asj_y", "nfe_y", "fin_y")) %>% 
@@ -113,6 +128,7 @@ figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ances
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 delongtest
 
+write.csv(delongtest, "output/RVIS/gnomAD_RVIS_DeLongTest")
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
@@ -140,6 +156,7 @@ gnomAD_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 gnomAD_RVIS_log <- gnomAD_RVIS_log %>% 
   rename("Ancestry" = score)
 
+write.csv(gnomAD_RVIS_log, "output/RVIS/gnomAD_RVIS_LogRegression")
 
 # Pull Functions for UKB RVIS Computation, Logistic Regression, DeLong Test
 UKB_data <- fread("data/UKB_RVIS.csv")
@@ -152,6 +169,16 @@ source("scripts/UKB_RVIS.R")
 df.tallies <- gnomAD_data |>
   select(-x, rvis_afr, rvis_amr, rvis_eas,
          rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
+
+UKB_RVIS <- df.tallies |> 
+    mutate( 
+      rvis_afr = CalcRVIS(df.tallies, "afr_y"),
+      rvis_eas = CalcRVIS(df.tallies, "eas_y"),
+      rvis_asj = CalcRVIS(df.tallies, "asj_y"),
+      rvis_nfe = CalcRVIS(df.tallies, "nfe_y"),
+      rvis_sas = CalcRVIS(df.tallies, "sas_y"))
+
+write.csv(UKB_RVIS, "output/RVIS/UKB_RVIS_Score")
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y")%>% 
@@ -246,6 +273,8 @@ figure_1d <- ggplot(UKBiobank_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = An
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 delongtest
 
+write.csv(delongtest, "output/RVIS/UKB_RVIS_DeLongTest")
+
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
@@ -271,7 +300,8 @@ HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI, maf.threshold = 0
 UKB_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_RVIS_log <- UKB_RVIS_log %>% 
   rename("Ancestry" = score)
-UKB_RVIS_log
+
+write.csv(UKB_RVIS_log, "output/RVIS/UKB_RVIS_LogRegression")
 
 # Compiling Figures Together
 library(patchwork)
@@ -281,4 +311,4 @@ patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10,
 patch
 
 # Save Figure as PDF
-ggsave("figure1.pdf", plot = patch, width = 174, height = 116, units = "mm")
+ggsave("figure1.pdf", plot = patch, path = "output/RVIS", width = 174, height = 116, units = "mm")
