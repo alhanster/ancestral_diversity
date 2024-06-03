@@ -131,23 +131,23 @@ delongtest
 write.csv(delongtest, "output/gnomAD_RVIS_DeLongTest.csv")
 
 # Logistic Regression
-dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dd_monoallelic) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, asd_monoallelic) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(gnomAD_data, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(gnomAD_data, score_cols, mgi_essential) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(gnomAD_data, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(gnomAD_data, score_cols, clingen_HI) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
@@ -276,23 +276,23 @@ delongtest
 write.csv(delongtest, "output/UKB_RVIS_DeLongTest.csv")
 
 # Logistic Regression
-dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(UKB_data, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(UKB_data, score_cols, dd_monoallelic) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(UKB_data, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(UKB_data, score_cols, asd_monoallelic) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(UKB_data, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(UKB_data, score_cols, mgi_essential) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
