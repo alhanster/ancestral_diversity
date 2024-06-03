@@ -3,8 +3,13 @@
 # Author: Alexander Han                                                        #
 ################################################################################
 
-# Paste Path to Repository
-# setwd()
+folder_path <- "output"
+
+# Check if the folder already exists
+if (!dir.exists(folder_path)) {
+  # Create the folder if it does not exist
+  dir.create(folder_path, recursive = TRUE)
+}
 
 # Pull Variant Annotation and Gene Lists
 source("scripts/GeneList_VariantAnnotations.R")
