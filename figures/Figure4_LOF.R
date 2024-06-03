@@ -91,7 +91,7 @@ LOF_OE_AUC <- LOF_OE_AUC %>%
 
 # Compiling DeLong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-delongtest
+
 write.csv(delongtest, "output/LOF_OE_DeLongTest.csv")
 
 # Logistic Regression
