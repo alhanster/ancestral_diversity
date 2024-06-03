@@ -31,3 +31,4 @@ GeneList_VariantAnnotations.R includes variant annotations and pulls gene lists.
 UKB_RVIS.R and gnomAD_RVIS.R include functions for calculating RVIS, logistic regression, and DeLong test. It also includes a function for graphing Figure 1 from our paper.
 
 UKB_MTR.R and UKB_LOF.R include functions for logistic regression and DeLong test. It also includes a function for graphing Figure 2 and Figure 4 from our paper.
+
