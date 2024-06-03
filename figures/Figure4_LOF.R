@@ -36,6 +36,7 @@ LOF_OE <- df %>%
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, 
          AFR, ASJ, EAS, SAS, `NFE (n=20k)`)
 
+write.csv(LOF_OE, "output/LOF_OE_Score.csv")
 
 # Logistic Regression and DeLong Test
 dee_results <- PrintAUC(LOF_OE, score_cols, dee_monoallelic)
@@ -86,6 +87,7 @@ LOF_OE_AUC <- LOF_OE_AUC %>%
 # Compiling DeLong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 delongtest
+write.csv(delongtest, "output/LOF_OE_DeLongTest.csv")
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(LOF_OE, score_cols, dee_monoallelic) %>% 
@@ -112,6 +114,7 @@ HI_AUC <- PrintLogRegResults(LOF_OE, score_cols, clingen_HI) %>%
 UKB_LOF_OE_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_LOF_OE_log <- UKB_LOF_OE_log %>% 
   rename("Ancestry" = score)
+write.csv(UKB_LOF_OE_log, "output/LOF_OE_LogRegression.csv")
 
 
 # Figure 4a: UKB LOF O/E Performances by Ancestry
@@ -148,6 +151,8 @@ LOF_FDR <- df %>%
     `NFE (n=20k)` = (nfe_20k_LOF/total_var)/((mu_lof+mu_lof*1.25)/((mu_lof+mu_lof*1.25)+mu_syn+mu_mis))
   ) %>%
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, AFR, ASJ, EAS, SAS, `NFE (n=20k)`)
+
+write.csv(LOF_FDR, "output/LOF_FDR_Score.csv")
 
 # Logistic Regression and DeLong Test
 dee_results <- PrintAUC(LOF_FDR, score_cols, dee_monoallelic)
@@ -198,7 +203,7 @@ LOF_FDR_AUC <- LOF_FDR_AUC %>%
 
 # Compiling DeLong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-
+write.csv(delongtest, "output/LOF_FDR_DeLongTest.csv")
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(LOF_FDR, score_cols, dee_monoallelic) %>% 
@@ -226,6 +231,7 @@ HI_AUC <- PrintLogRegResults(LOF_FDR, score_cols, clingen_HI) %>%
 UKB_LOF_FDR_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_LOF_FDR_log <- UKB_LOF_FDR_log %>% 
   rename("Ancestry" = score)
+write.csv(UKB_LOF_FDR_log, "output/LOF_FDR_LogRegression.csv")
 
 
 # Figure 4B: UKB LOF FDR Performances by Ancestry
@@ -243,5 +249,5 @@ figure4b <- patch2 + plot_annotation('B')
 
 
 # Saving Figures as PDFs
-ggsave("Figure4a.pdf", plot = figure4a, width = 174, height = 87, units = "mm")
-ggsave("Figure4b.pdf", plot = figure4b, width = 174, height = 87, units = "mm")
+ggsave("Figure4a.pdf", plot = figure4a, path = "output", width = 174, height = 87, units = "mm")
+ggsave("Figure4b.pdf", plot = figure4b, path = "output", width = 174, height = 87, units = "mm")
