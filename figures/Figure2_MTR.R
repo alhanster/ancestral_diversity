@@ -34,6 +34,8 @@ MTR <- df %>%
   ) %>% 
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, `AFR`, `ASJ`, `EAS`, `SAS`, `NFE (n=20k)`)
 
+write.csv(MTR, "output/MTR_Score.csv")
+
 # Logistic Regression and DeLong Test
 dee_results <- PrintAUC(MTR, score_cols, dee_monoallelic)
 dee_AUC <- dee_results$auc_df %>% 
@@ -82,6 +84,7 @@ MTR_AUC <- MTR_AUC %>%
   rename("Ancestry" = score)
 
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
+write.csv(delongtest, "output/MTR_DeLongTest.csv")
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(MTR, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
@@ -108,6 +111,7 @@ HI_AUC <- PrintLogRegResults(MTR, score_cols, clingen_HI, maf.threshold = 0.0005
 UKB_MTR_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_MTR_log <- UKB_MTR_log %>% 
   rename("Ancestry" = score)
+write.csv(UKB_MTR_log, "output/MTR_LogRegression.csv")
 
 # Compiling Figure
 a <- PrintGraph(MTR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
@@ -123,4 +127,4 @@ patch <- (a|b|c|d|e)
 patch
 
 # Saving Figure as PDF
-ggsave("Figure2_MTR.pdf", plot = patch, width = 174, height = 87, units = "mm")
+ggsave("Figure2_MTR.pdf", plot = patch, path = "output", width = 174, height = 87, units = "mm")
