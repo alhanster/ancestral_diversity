@@ -3,8 +3,13 @@
 # Author: Alexander Han                                                        #
 ################################################################################
 
-# Paste Path to Repository
-# setwd()
+folder_path <- "output"
+
+# Check if the folder already exists
+if (!dir.exists(folder_path)) {
+  # Create the folder if it does not exist
+  dir.create(folder_path, recursive = TRUE)
+}
 
 # Pull Variant Annotation and Gene Lists
 source("scripts/GeneList_VariantAnnotations.R")
@@ -19,6 +24,21 @@ gnomAD_data <- fread("data/gnomAD_RVIS.csv")
 df.tallies <- gnomAD_data |>
   select(-x, rvis_afr, rvis_amr, rvis_eas,
          rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
+
+
+# Calculate RVIS for each ancestry
+UKB_RVIS <- df.tallies |> 
+    mutate( 
+      rvis_afr = CalcRVIS(df.tallies, "afr_y"),
+      rvis_eas = CalcRVIS(df.tallies, "eas_y"),
+      rvis_asj = CalcRVIS(df.tallies, "asj_y"),
+      rvis_nfe = CalcRVIS(df.tallies, "nfe_y"),
+      rvis_sas = CalcRVIS(df.tallies, "sas_y"),
+      rvis_amr = CalcRVIS(df.tallies, "amr_y"),
+      rvis_fin = CalcRVIS(df.tallies, "fin_y")
+    )
+
+write.csv(UKB_RVIS, "output/UKB_RVIS_Score.csv")
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y") %>% 
@@ -111,27 +131,27 @@ figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ances
 
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-delongtest
 
+write.csv(delongtest, "output/gnomAD_RVIS_DeLongTest.csv")
 
 # Logistic Regression
-dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dd_monoallelic) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(gnomAD_data, score_cols, asd_monoallelic) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(gnomAD_data, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(gnomAD_data, score_cols, mgi_essential) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(gnomAD_data, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(gnomAD_data, score_cols, clingen_HI) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
@@ -140,6 +160,7 @@ gnomAD_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 gnomAD_RVIS_log <- gnomAD_RVIS_log %>% 
   rename("Ancestry" = score)
 
+write.csv(gnomAD_RVIS_log, "output/gnomAD_RVIS_LogRegression.csv")
 
 # Pull Functions for UKB RVIS Computation, Logistic Regression, DeLong Test
 UKB_data <- fread("data/UKB_RVIS.csv")
@@ -152,6 +173,16 @@ source("scripts/UKB_RVIS.R")
 df.tallies <- gnomAD_data |>
   select(-x, rvis_afr, rvis_amr, rvis_eas,
          rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
+
+UKB_RVIS <- df.tallies |> 
+    mutate( 
+      rvis_afr = CalcRVIS(df.tallies, "afr_y"),
+      rvis_eas = CalcRVIS(df.tallies, "eas_y"),
+      rvis_asj = CalcRVIS(df.tallies, "asj_y"),
+      rvis_nfe = CalcRVIS(df.tallies, "nfe_y"),
+      rvis_sas = CalcRVIS(df.tallies, "sas_y"))
+
+write.csv(UKB_RVIS, "output/UKB_RVIS_Score.csv")
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y")%>% 
@@ -244,26 +275,27 @@ figure_1d <- ggplot(UKBiobank_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = An
 
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-delongtest
+
+write.csv(delongtest, "output/UKB_RVIS_DeLongTest.csv")
 
 # Logistic Regression
-dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
+dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic) %>% 
   mutate(`Gene List` = "DEE Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-dd_AUC <- PrintLogRegResults(UKB_data, score_cols, dd_monoallelic, maf.threshold = 0.0005) %>% 
+dd_AUC <- PrintLogRegResults(UKB_data, score_cols, dd_monoallelic) %>% 
   mutate(`Gene List` = "DD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-asd_AUC <- PrintLogRegResults(UKB_data, score_cols, asd_monoallelic, maf.threshold = 0.0005) %>% 
+asd_AUC <- PrintLogRegResults(UKB_data, score_cols, asd_monoallelic) %>% 
   mutate(`Gene List` = "ASD Monoallelic") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-mgi_AUC <- PrintLogRegResults(UKB_data, score_cols, mgi_essential, maf.threshold = 0.0005) %>% 
+mgi_AUC <- PrintLogRegResults(UKB_data, score_cols, mgi_essential) %>% 
   mutate(`Gene List` = "Mouse Essential") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
-HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI, maf.threshold = 0.0005) %>% 
+HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI) %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
   select(score, `Gene List`, Log.Reg.P.val, AUC)
 
@@ -271,14 +303,13 @@ HI_AUC <- PrintLogRegResults(UKB_data, score_cols, clingen_HI, maf.threshold = 0
 UKB_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_RVIS_log <- UKB_RVIS_log %>% 
   rename("Ancestry" = score)
-UKB_RVIS_log
+
+write.csv(UKB_RVIS_log, "output/UKB_RVIS_LogRegression.csv")
 
 # Compiling Figures Together
 library(patchwork)
 
 patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm")))| figure_1b) / (figure_1c + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm"))) | figure_1d) + plot_annotation(tag_levels = 'A')
 
-patch
-
 # Save Figure as PDF
-ggsave("figure1.pdf", plot = patch, width = 174, height = 116, units = "mm")
+ggsave("figure1.pdf", plot = patch, path = "output", width = 174, height = 116, units = "mm")

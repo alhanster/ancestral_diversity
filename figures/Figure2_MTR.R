@@ -3,8 +3,13 @@
 # Author: Alexander Han                                                        #
 ################################################################################
 
-# Paste Path to Repository
-# setwd()
+folder_path <- "output"
+
+# Check if the folder already exists
+if (!dir.exists(folder_path)) {
+  # Create the folder if it does not exist
+  dir.create(folder_path, recursive = TRUE)
+}
 
 # Pull Variant Annotation and Gene Lists
 source("scripts/GeneList_VariantAnnotations.R")
@@ -33,6 +38,8 @@ MTR <- df %>%
     `NFE (n=20k)` = (nfe_20k_mis/(nfe_20k_mis + nfe_20k_syn)) / (possible_mis/(possible_mis + possible_syn))
   ) %>% 
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, `AFR`, `ASJ`, `EAS`, `SAS`, `NFE (n=20k)`)
+
+write.csv(MTR, "output/MTR_Score.csv")
 
 # Logistic Regression and DeLong Test
 dee_results <- PrintAUC(MTR, score_cols, dee_monoallelic)
@@ -82,6 +89,7 @@ MTR_AUC <- MTR_AUC %>%
   rename("Ancestry" = score)
 
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
+write.csv(delongtest, "output/MTR_DeLongTest.csv")
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(MTR, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
@@ -108,6 +116,7 @@ HI_AUC <- PrintLogRegResults(MTR, score_cols, clingen_HI, maf.threshold = 0.0005
 UKB_MTR_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_MTR_log <- UKB_MTR_log %>% 
   rename("Ancestry" = score)
+write.csv(UKB_MTR_log, "output/MTR_LogRegression.csv")
 
 # Compiling Figure
 a <- PrintGraph(MTR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
@@ -120,7 +129,5 @@ library(patchwork)
 
 patch <- (a|b|c|d|e)
 
-patch
-
 # Saving Figure as PDF
-ggsave("Figure2_MTR.pdf", plot = patch, width = 174, height = 87, units = "mm")
+ggsave("figure2.pdf", plot = patch, path = "output", width = 174, height = 87, units = "mm")

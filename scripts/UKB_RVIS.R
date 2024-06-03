@@ -27,7 +27,7 @@ CalcRVIS <- function(df, y.colname) {
 }
 
 
-PrintAUC <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
+PrintAUC <- function(df, score_cols, gene.list) {
   
   df.tallies <- df |> 
     select(Gene, x, afr_y, asj_y, eas_y, nfe_y, sas_y, mutability)
@@ -89,7 +89,7 @@ PrintAUC <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
   return(list(auc_df = auc_df, roc_df = roc_df, delong_results = delong_results))
 }
 
-PrintLogRegResults <- function(df, score_cols, gene.list, maf.threshold = 0.0005) {
+PrintLogRegResults <- function(df, score_cols, gene.list) {
   
   df.tallies <- df |> 
     select(Gene, x, afr_y, asj_y, eas_y, nfe_y, sas_y, mutability)
