@@ -9,8 +9,6 @@ folder_path <- "output"
 if (!dir.exists(folder_path)) {
   # Create the folder if it does not exist
   dir.create(folder_path, recursive = TRUE)
-} else {
-  print("The folder already exists.")
 }
 
 # Pull Variant Annotation and Gene Lists
