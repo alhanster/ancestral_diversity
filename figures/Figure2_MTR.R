@@ -4,7 +4,7 @@
 ################################################################################
 
 # Paste Path to Repository
-setwd()
+# setwd()
 
 # Pull Variant Annotation and Gene Lists
 source("scripts/GeneList_VariantAnnotations.R")
