@@ -1,7 +1,8 @@
 # Increased representation of human genetic ancestries improves genic intolerance metrics 
 
 
-Code repository for calculating RVIS, MTR, LOF O/E, LOF-FDR scores. 
+Code repository for calculating RVIS, MTR, LOF O/E, LOF-FDR scores.
+These intolerance metrics were calculated using using two large whole-exome sequencing datasets: the UK Biobank (n=460,551) and gnomAD v2.1 (n=125,748).
 
 # Usage
 After downloading the repository, expand the file and paste the path into setwd() in R files in figures folder.
