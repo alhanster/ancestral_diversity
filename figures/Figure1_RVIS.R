@@ -311,4 +311,4 @@ patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10,
 patch
 
 # Save Figure as PDF
-ggsave("figure1.pdf", plot = patch, path = "output/RVIS", width = 174, height = 116, units = "mm")
+ggsave("figure1.pdf", plot = patch, path = "output", width = 174, height = 116, units = "mm")
