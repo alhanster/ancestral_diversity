@@ -32,6 +32,3 @@ UKB_RVIS.R and gnomAD_RVIS.R include functions for calculating RVIS, logistic re
 
 UKB_MTR.R and UKB_LOF.R include functions for logistic regression and DeLong test. It also includes a function for graphing Figure 2 and Figure 4 from our paper.
 
-
-
-
