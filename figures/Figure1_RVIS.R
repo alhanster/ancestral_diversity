@@ -131,7 +131,6 @@ figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ances
 
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-delongtest
 
 write.csv(delongtest, "output/gnomAD_RVIS_DeLongTest.csv")
 
@@ -276,7 +275,6 @@ figure_1d <- ggplot(UKBiobank_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = An
 
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-delongtest
 
 write.csv(delongtest, "output/UKB_RVIS_DeLongTest.csv")
 
@@ -312,8 +310,6 @@ write.csv(UKB_RVIS_log, "output/UKB_RVIS_LogRegression.csv")
 library(patchwork)
 
 patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm")))| figure_1b) / (figure_1c + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm"))) | figure_1d) + plot_annotation(tag_levels = 'A')
-
-patch
 
 # Save Figure as PDF
 ggsave("figure1.pdf", plot = patch, path = "output", width = 174, height = 116, units = "mm")
