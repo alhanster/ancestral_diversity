@@ -3,8 +3,8 @@
 # Author: Alexander Han                                                        #
 ################################################################################
 
-# Paste Path to Repository
-# setwd()
+
+
 
 # Pull Variant Annotation and Gene Lists
 source("scripts/GeneList_VariantAnnotations.R")
