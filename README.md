@@ -6,7 +6,13 @@ These intolerance metrics were calculated using using two large whole-exome sequ
 For questions, contact alh16@rice.edu.
 
 # Usage
-After downloading the repository, expand the file and paste the path into setwd() in R files in figures folder.
+After downloading the repository, expand the file and run the following command lines.
+```
+cd ancestry_diversity
+Rscript figures/Figure1_RVIS.R
+Rscript figures/Figure2_MTR.R
+Rscript figures/Figure4_LOF.R
+```
 
 # Dependencies
 This package depends on the following R packages:
