@@ -5,10 +5,12 @@ Code repository for calculating RVIS, MTR, LOF O/E, LOF-FDR scores.
 
 # Usage
 After downloading the repository, expand the file and run the following command lines.
-
+```
 cd ancestry_diversity
 Rscript figures/Figure1_RVIS.R
-
+Rscript figures/Figure2_MTR.R
+Rscript figures/Figure4_LOF.R
+```
 # Dependencies
 This package depends on the following R packages:
 
