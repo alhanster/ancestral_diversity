@@ -171,8 +171,8 @@ source("scripts/UKB_RVIS.R")
 
 # Figure 1C: UKBiobank RVIS Curves
 df.tallies <- UKB_data |>
-  select(-x, rvis_afr, rvis_amr, rvis_eas,
-         rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
+  select(-x, -rvis_afr, -rvis_eas,
+         -rvis_asj, -rvis_nfe, -rvis_sas)
 
 UKB_RVIS <- df.tallies |> 
     mutate( 
