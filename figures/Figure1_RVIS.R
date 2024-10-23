@@ -22,8 +22,8 @@ gnomAD_data <- fread("data/gnomAD_RVIS.csv")
 
 # Figure 1A: gnomAD RVIS Curves
 df.tallies <- gnomAD_data |>
-  select(-x, rvis_afr, rvis_amr, rvis_eas,
-         rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
+  select(-x, -rvis_afr, -rvis_amr, -rvis_eas,
+         -rvis_asj, -rvis_fin, -rvis_nfe, -rvis_sas)
 
 
 # Calculate RVIS for each ancestry
