@@ -27,7 +27,7 @@ df.tallies <- gnomAD_data |>
 
 
 # Calculate RVIS for each ancestry
-UKB_RVIS <- df.tallies |> 
+gnomAD_RVIS <- df.tallies |> 
     mutate( 
       rvis_afr = CalcRVIS(df.tallies, "afr_y"),
       rvis_eas = CalcRVIS(df.tallies, "eas_y"),
@@ -38,7 +38,7 @@ UKB_RVIS <- df.tallies |>
       rvis_fin = CalcRVIS(df.tallies, "fin_y")
     )
 
-write.csv(UKB_RVIS, "output/UKB_RVIS_Score.csv")
+write.csv(gnomAD_RVIS, "output/gnomAD_RVIS_Score.csv")
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y") %>% 
@@ -170,7 +170,7 @@ source("scripts/UKB_RVIS.R")
 
 
 # Figure 1C: UKBiobank RVIS Curves
-df.tallies <- gnomAD_data |>
+df.tallies <- UKB_data |>
   select(-x, rvis_afr, rvis_amr, rvis_eas,
          rvis_asj, rvis_fin, rvis_nfe, rvis_sas)
 
@@ -249,18 +249,18 @@ HI_delong <- HI_results$delong_results %>%
   select(`Gene List`, Score1, Score2, De.Long.P.val)
 
 # Compiling AUC Values for Logistic Regression
-UKBiobank_RVIS_AUC <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
-UKBiobank_RVIS_AUC <- UKBiobank_RVIS_AUC %>% 
+UKB_RVIS_AUC <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
+UKB_RVIS_AUC <- UKB_RVIS_AUC %>% 
   rename("Ancestry" = score) %>% 
   mutate(Ancestry = toupper(gsub("rvis_", "", Ancestry)))
 
-UKBiobank_RVIS_AUC$Ancestry <- factor(UKBiobank_RVIS_AUC$Ancestry, levels = c("AFR", "SAS", "EAS", "ASJ", "NFE"))
-UKBiobank_RVIS_AUC$`Gene List` <- factor(UKBiobank_RVIS_AUC$`Gene List`, 
+UKB_RVIS_AUC$Ancestry <- factor(UKB_RVIS_AUC$Ancestry, levels = c("AFR", "SAS", "EAS", "ASJ", "NFE"))
+UKB_RVIS_AUC$`Gene List` <- factor(UKB_RVIS_AUC$`Gene List`, 
                                          levels = c("DEE Monoallelic\n (n=94)", "DD Monoallelic\n (n=435)", "ASD Monoallelic\n (n=190)", "Haploinsufficient\n (n=360)", "Mouse Essential\n (n=2454)"))
 
 
 # Figure 1D: UKBiobank RVIS Performances by Ancestry
-figure_1d <- ggplot(UKBiobank_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry)) +
+figure_1d <- ggplot(UKB_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry)) +
   geom_point(position = position_jitter(width = 0.25), size = 1, alpha = 0.5) +
   labs(y = "AUC Scores") +
   scale_fill_manual(values = c("Ancestry A" = "blue", "Ancestry B" = "red")) +
