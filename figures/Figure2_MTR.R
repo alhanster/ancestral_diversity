@@ -4,7 +4,6 @@
 ################################################################################
 
 folder_path <- "output"
-
 # Check if the folder already exists
 if (!dir.exists(folder_path)) {
   # Create the folder if it does not exist
@@ -26,10 +25,10 @@ df <- data |>
 # Computing MTR Score
 MTR <- df %>%
   mutate(
-    `Maximally Diverse (n=43k)` = (Diverse_mis/(Diverse_mis + Diverse_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    `NFE (n=43k)` = (Nfe_43k_mis/(Nfe_43k_mis + Nfe_43k_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    `NFE (n=440k)` = (Nfe_440k_mis/(Nfe_440k_mis + Nfe_440k_syn)) / (possible_mis/(possible_mis + possible_syn)),
-    `Full Dataset (n=460k)` = (All_mis/(All_mis + All_syn)) / (possible_mis/(possible_mis + possible_syn)),
+    `Maximally Diverse (n=43k)` = (max_diverse_mis/(max_diverse_mis + max_diverse_syn)) / (possible_mis/(possible_mis + possible_syn)),
+    `NFE (n=43k)` = (nfe_43k_mis/(nfe_43k_mis + nfe_43k_syn)) / (possible_mis/(possible_mis + possible_syn)),
+    `NFE (n=440k)` = (nfe_440k_mis/(nfe_440k_mis + nfe_440k_syn)) / (possible_mis/(possible_mis + possible_syn)),
+    `Full Dataset (n=460k)` = (all_mis/(all_mis + all_syn)) / (possible_mis/(possible_mis + possible_syn)),
     
     `AFR` = (afr_mis/(afr_mis + afr_syn)) / (possible_mis/(possible_mis + possible_syn)),
     `ASJ` = (asj_mis/(asj_mis + asj_syn)) / (possible_mis/(possible_mis + possible_syn)),
@@ -39,7 +38,7 @@ MTR <- df %>%
   ) %>% 
   select(Gene, `Maximally Diverse (n=43k)`, `NFE (n=43k)`, `NFE (n=440k)`, `Full Dataset (n=460k)`, `AFR`, `ASJ`, `EAS`, `SAS`, `NFE (n=20k)`)
 
-write.csv(MTR, "output/MTR_Score.csv")
+write.csv(MTR, "output/MTR_Score.csv", row.names = FALSE)
 
 # Logistic Regression and DeLong Test
 dee_results <- PrintAUC(MTR, score_cols, dee_monoallelic)
@@ -89,7 +88,7 @@ MTR_AUC <- MTR_AUC %>%
   rename("Ancestry" = score)
 
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
-write.csv(delongtest, "output/MTR_DeLongTest.csv")
+write.csv(delongtest, "output/MTR_DeLongTest.csv", row.names = FALSE)
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(MTR, score_cols, dee_monoallelic, maf.threshold = 0.0005) %>% 
@@ -116,7 +115,7 @@ HI_AUC <- PrintLogRegResults(MTR, score_cols, clingen_HI, maf.threshold = 0.0005
 UKB_MTR_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_MTR_log <- UKB_MTR_log %>% 
   rename("Ancestry" = score)
-write.csv(UKB_MTR_log, "output/MTR_LogRegression.csv")
+write.csv(UKB_MTR_log, "output/MTR_LogRegression.csv", row.names = FALSE)
 
 # Compiling Figure
 a <- PrintGraph(MTR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") 
