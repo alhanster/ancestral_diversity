@@ -38,7 +38,7 @@ gnomAD_RVIS <- df.tallies |>
       rvis_fin = CalcRVIS(df.tallies, "fin_y")
     )
 
-write.csv(gnomAD_RVIS, "output/gnomAD_RVIS_Score.csv")
+write.csv(gnomAD_RVIS, "output/gnomAD_RVIS_Score.csv", row.names = FALSE)
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y") %>% 
@@ -132,7 +132,7 @@ figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ances
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 
-write.csv(delongtest, "output/gnomAD_RVIS_DeLongTest.csv")
+write.csv(delongtest, "output/gnomAD_RVIS_DeLongTest.csv", row.names = FALSE)
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(gnomAD_data, score_cols, dee_monoallelic) %>% 
@@ -160,7 +160,7 @@ gnomAD_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 gnomAD_RVIS_log <- gnomAD_RVIS_log %>% 
   rename("Ancestry" = score)
 
-write.csv(gnomAD_RVIS_log, "output/gnomAD_RVIS_LogRegression.csv")
+write.csv(gnomAD_RVIS_log, "output/gnomAD_RVIS_LogRegression.csv", row.names = FALSE)
 
 # Pull Functions for UKB RVIS Computation, Logistic Regression, DeLong Test
 UKB_data <- fread("data/UKB_RVIS.csv")
@@ -182,7 +182,7 @@ UKB_RVIS <- df.tallies |>
       rvis_nfe = CalcRVIS(df.tallies, "nfe_y"),
       rvis_sas = CalcRVIS(df.tallies, "sas_y"))
 
-write.csv(UKB_RVIS, "output/UKB_RVIS_Score.csv")
+write.csv(UKB_RVIS, "output/UKB_RVIS_Score.csv", row.names = FALSE)
 
 xy <- df.tallies |> 
   pivot_longer(cols = -c(Gene, mutability), names_to = "ancestry", values_to = "y")%>% 
@@ -276,7 +276,7 @@ figure_1d <- ggplot(UKB_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
 
-write.csv(delongtest, "output/UKB_RVIS_DeLongTest.csv")
+write.csv(delongtest, "output/UKB_RVIS_DeLongTest.csv", row.names = FALSE)
 
 # Logistic Regression
 dee_AUC <- PrintLogRegResults(UKB_data, score_cols, dee_monoallelic) %>% 
@@ -304,7 +304,7 @@ UKB_RVIS_log <- rbind(dee_AUC, dd_AUC, asd_AUC, mgi_AUC, HI_AUC)
 UKB_RVIS_log <- UKB_RVIS_log %>% 
   rename("Ancestry" = score)
 
-write.csv(UKB_RVIS_log, "output/UKB_RVIS_LogRegression.csv")
+write.csv(UKB_RVIS_log, "output/UKB_RVIS_LogRegression.csv", row.names = FALSE)
 
 # Compiling Figures Together
 library(patchwork)
