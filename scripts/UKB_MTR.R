@@ -14,7 +14,8 @@ PrintAUC <- function(MTR, score_cols, gene.list) {
     select(c(Gene, all_of(score_cols))) |> 
     pivot_longer(cols = score_cols, 
                  names_to = "score_type", 
-                 values_to = "score_value")
+                 values_to = "score_value")|>
+    filter(!is.na(score_value))
   
   df_long <- df_long |> 
     mutate(gene_list = ifelse(Gene %in% gene.list$V1, 1, 0))
@@ -66,7 +67,8 @@ PrintLogRegResults <- function(MTR, score_cols, gene.list, maf.threshold = 0.000
     select(c(Gene, all_of(score_cols))) |> 
     pivot_longer(cols = score_cols, 
                  names_to = "score_type", 
-                 values_to = "score_value")
+                 values_to = "score_value")|>
+    filter(!is.na(score_value))
   
   df_long <- df_long |> 
     mutate(gene_list = ifelse(Gene %in% gene.list$V1, 1, 0))
