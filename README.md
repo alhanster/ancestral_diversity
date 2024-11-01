@@ -12,7 +12,8 @@ After downloading the repository, expand the file and run the following command 
 cd ancestry_diversity
 Rscript figures/Figure1_RVIS.R
 Rscript figures/Figure2_MTR.R
-Rscript figures/Figure4_LOF.R
+Rscript figures/Figure4_LOF_OE.R
+Rscript figures/Supp_Figure3_LOF_FDR.R
 ```
 
 # Dependencies
@@ -35,7 +36,7 @@ Figure2_MTR.R computes MTR in UKB cohorts. Logistic Regression is performed to e
 
 Figure4_LOF_OE.R computes LOF O/E in UKB cohorts. Logistic Regression is performed to evaluate how LOF O/E can be used to determine genes in disease implicated gene lists. DeLong test is used to determine whether difference between AUC values are statistically significant.  <br>
 
-Supp_Figure3_LOF_FDR computes LOF-FDR in UKB cohorts. Logistic Regression is performed to evaluate how LOF-FDR can be used to determine genes in disease implicated gene lists. DeLong test is used to determine whether difference between AUC values are statistically significant.
+Supp_Figure3_LOF_FDR.R computes LOF-FDR in UKB cohorts. Logistic Regression is performed to evaluate how LOF-FDR can be used to determine genes in disease implicated gene lists. DeLong test is used to determine whether difference between AUC values are statistically significant.  <br>
 
 # Scripts
 
