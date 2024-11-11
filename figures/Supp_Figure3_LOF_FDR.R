@@ -138,7 +138,7 @@ mgi_delong <- mgi_results$delong_results %>%
 
 HI_results <- PrintAUC(lof.fdr, score_cols, clingen_HI)
 HI_AUC <- HI_results$auc_df %>% 
-  rename(`Haploinsufficient\n (n=360)` = AUC) %>% 
+  rename(`Haploinsufficient\n (n=390)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
 HI_delong <- HI_results$delong_results %>% 
   mutate(Gene_List = "Haploinsufficient") %>% 
@@ -187,7 +187,7 @@ write.csv(UKB_LOF_FDR_log, "output/LOF_FDR_LogRegression.csv", row.names = FALSE
 a <- PrintGraph(LOF_FDR_AUC, "DEE Monoallelic\n (n=94)") + theme(legend.position = "none") + labs(y = "LOF-FDR AUC Scores")
 b <- PrintGraph(LOF_FDR_AUC, "DD Monoallelic\n (n=435)") + theme(legend.position = "none") + labs(y = "")
 c <- PrintGraph(LOF_FDR_AUC, "ASD Monoallelic\n (n=190)") + theme(legend.position = "none") + labs(y = "")
-d <- PrintGraph(LOF_FDR_AUC, "Haploinsufficient\n (n=360)") + theme(legend.position = "none") + labs(y = "")
+d <- PrintGraph(LOF_FDR_AUC, "Haploinsufficient\n (n=390)") + theme(legend.position = "none") + labs(y = "")
 e <- PrintGraph(LOF_FDR_AUC, "Mouse Essential\n (n=2454)") + theme(legend.position = "none") + labs(y = "")
 
 library(patchwork)
