@@ -98,7 +98,7 @@ mgi_delong <- mgi_results$delong_results %>%
 
 HI_results <- PrintAUC(gnomAD_data, score_cols, clingen_HI)
 HI_AUC <- HI_results$auc_df %>% 
-  rename(`Haploinsufficient\n (n=360)` = AUC) %>% 
+  rename(`Haploinsufficient\n (n=390)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
 HI_delong <- HI_results$delong_results %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
@@ -112,7 +112,7 @@ gnomAD_RVIS_AUC <- gnomAD_RVIS_AUC %>%
 
 gnomAD_RVIS_AUC$Ancestry <- factor(gnomAD_RVIS_AUC$Ancestry, levels = c("AFR", "SAS", "AMR", "EAS", "ASJ", "NFE", "FIN"))
 gnomAD_RVIS_AUC$`Gene List` <- factor(gnomAD_RVIS_AUC$`Gene List`, 
-                                      levels = c("DEE Monoallelic\n (n=94)", "DD Monoallelic\n (n=435)", "ASD Monoallelic\n (n=190)", "Haploinsufficient\n (n=360)", "Mouse Essential\n (n=2454)"))
+                                      levels = c("DEE Monoallelic\n (n=94)", "DD Monoallelic\n (n=435)", "ASD Monoallelic\n (n=190)", "Haploinsufficient\n (n=390)", "Mouse Essential\n (n=2454)"))
 
 
 # Figure 1B: gnomAD RVIS Performances by Ancestry
@@ -242,7 +242,7 @@ mgi_delong <- mgi_results$delong_results %>%
 
 HI_results <- PrintAUC(UKB_data, score_cols, clingen_HI)
 HI_AUC <- HI_results$auc_df %>% 
-  rename(`Haploinsufficient\n (n=360)` = AUC) %>% 
+  rename(`Haploinsufficient\n (n=390)` = AUC) %>% 
   pivot_longer(cols = -1, names_to = "Gene List", values_to = "AUC")
 HI_delong <- HI_results$delong_results %>% 
   mutate(`Gene List` = "Haploinsufficient") %>% 
@@ -256,7 +256,7 @@ UKB_RVIS_AUC <- UKB_RVIS_AUC %>%
 
 UKB_RVIS_AUC$Ancestry <- factor(UKB_RVIS_AUC$Ancestry, levels = c("AFR", "SAS", "EAS", "ASJ", "NFE"))
 UKB_RVIS_AUC$`Gene List` <- factor(UKB_RVIS_AUC$`Gene List`, 
-                                         levels = c("DEE Monoallelic\n (n=94)", "DD Monoallelic\n (n=435)", "ASD Monoallelic\n (n=190)", "Haploinsufficient\n (n=360)", "Mouse Essential\n (n=2454)"))
+                                         levels = c("DEE Monoallelic\n (n=94)", "DD Monoallelic\n (n=435)", "ASD Monoallelic\n (n=190)", "Haploinsufficient\n (n=390)", "Mouse Essential\n (n=2454)"))
 
 
 # Figure 1D: UKBiobank RVIS Performances by Ancestry
