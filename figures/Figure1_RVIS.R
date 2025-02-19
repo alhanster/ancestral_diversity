@@ -59,9 +59,14 @@ figure_1a <- xy |>
   ylab("Common (MAF>0.05%) \n functional variants")+
   scale_color_manual(values = colorblind_palette)+
   theme_classic(base_size=7)+
-  theme(legend.title = element_text(size = 7),
-        legend.text = element_text(size = 7),
-        legend.key.size = unit(3, "mm"))
+  theme(
+    text = element_text(size = 7),  # Ensure all text is Arial and size 7
+    axis.title = element_text(size = 7),  # Axis titles
+    axis.text = element_text(size = 7),  # Axis labels
+    legend.title = element_text(size = 7),  # Legend title
+    legend.text = element_text(size = 7),  # Legend labels
+    legend.key.size = unit(3, "mm")  # Legend key size
+  )
 
 # Logistic Regression and DeLong Test
 dee_results <- PrintAUC(gnomAD_data, score_cols, dee_monoallelic)
@@ -121,11 +126,16 @@ figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ances
   labs(y = "AUC Scores") +
   ylim(0.6, 0.95)+
   theme_classic(base_size=7)+
-  theme(legend.title = element_text(size = 7),
-        legend.text = element_text(size = 7),
-        legend.key.size = unit(3, "mm"),
-        axis.text.x = element_text(angle = 45, hjust = 1), 
-        axis.title.x = element_blank())+
+  theme(
+    text = element_text(size = 7),  # Ensure all text is Arial and size 7
+    axis.title = element_text(size = 7),  # Axis titles
+    axis.text = element_text(size = 7),  # Axis labels
+    legend.title = element_text(size = 7),  # Legend title
+    legend.text = element_text(size = 7),  # Legend labels
+    legend.key.size = unit(3, "mm"),  # Legend key size
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 7),  # Adjust x-axis text angle & size
+    axis.title.x = element_blank()  # Remove x-axis title
+  ) +
   scale_color_manual(values = colorblind_palette)
 
 
@@ -202,9 +212,13 @@ figure_1c <- xy |>
   ylab("Common (MAF>0.05%) \n functional variants")+
   scale_color_manual(values = ukb_colorblind_palette)+
   theme_classic(base_size=7)+
-  theme(legend.title = element_text(size = 7),
-        legend.text = element_text(size = 7),
-        legend.key.size = unit(3, "mm")
+  theme(
+    text = element_text(size = 7),  # Ensure all text is Arial and size 7
+    axis.title = element_text(size = 7),  # Axis titles
+    axis.text = element_text(size = 7),  # Axis labels
+    legend.title = element_text(size = 7),  # Legend title
+    legend.text = element_text(size = 7),  # Legend labels
+    legend.key.size = unit(3, "mm")  # Legend key size
   )
 
 # Logistic Regression and DeLong Test
@@ -266,11 +280,16 @@ figure_1d <- ggplot(UKB_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry
   scale_fill_manual(values = c("Ancestry A" = "blue", "Ancestry B" = "red")) +
   ylim(0.6, 0.95)+
   theme_classic(base_size=7)+
-  theme(legend.title = element_text(size = 7),
-        legend.text = element_text(size = 7),
-        legend.key.size = unit(3, "mm"),
-        axis.text.x = element_text(angle = 45, hjust = 1), 
-        axis.title.x = element_blank())+
+  theme(
+    text = element_text(size = 7),  # Ensure all text is Arial and size 7
+    axis.title = element_text(size = 7),  # Axis titles
+    axis.text = element_text(size = 7),  # Axis labels
+    legend.title = element_text(size = 7),  # Legend title
+    legend.text = element_text(size = 7),  # Legend labels
+    legend.key.size = unit(3, "mm"),  # Legend key size
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 7),  # Adjust x-axis text angle & size
+    axis.title.x = element_blank()  # Remove x-axis title
+  )+
   scale_color_manual(values = ukb_colorblind_palette)
 
 # Compiling Delong Test
@@ -309,7 +328,8 @@ write.csv(UKB_RVIS_log, "output/UKB_RVIS_LogRegression.csv", row.names = FALSE)
 # Compiling Figures Together
 library(patchwork)
 
-patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm")))| figure_1b) / (figure_1c + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm"))) | figure_1d) + plot_annotation(tag_levels = 'A')
+patch <- (figure_1a + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm")))| figure_1b) / (figure_1c + theme(axis.title.x = element_text(margin = margin(t = -10, unit = "mm"))) | figure_1d) + 
+  plot_annotation(tag_levels = 'a', theme = theme(plot.tag = element_text(size = 7)))
 
 # Save Figure as PDF
-ggsave("figure1.pdf", plot = patch, path = "output", width = 174, height = 116, units = "mm")
+ggsave("figure1.pdf", plot = patch, path = "output", width = 180, height = 160, units = "mm")
