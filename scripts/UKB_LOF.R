@@ -148,8 +148,17 @@ PrintGraph <- function(data, gene.list) {
     ggtitle(paste(gene.list))+
     ylim(0.4,0.9)+
     theme_classic(base_size=7)+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1), axis.title.x = element_blank(), 
-          plot.title = element_text(hjust = 0.5))
+    theme(
+      text = element_text(size = 7),  # Ensure all text is Arial and size 7
+      plot.title = element_text(size = 7, hjust = 0.5),
+      axis.title = element_text(size = 7),  # Axis titles
+      axis.text = element_text(size = 6),  # Axis labels
+      legend.title = element_text(size = 7),  # Legend title
+      legend.text = element_text(size = 7),  # Legend labels
+      legend.key.size = unit(3, "mm"),  # Legend key size
+      axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 5),  # Adjust x-axis text angle & size
+      axis.title.x = element_blank()  # Remove x-axis title
+    )
   
   figure
 }
