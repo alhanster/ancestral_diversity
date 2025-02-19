@@ -129,4 +129,4 @@ library(patchwork)
 patch <- (a|b|c|d|e)
 
 # Saving Figure as PDF
-ggsave("figure2.pdf", plot = patch, path = "output", width = 174, height = 87, units = "mm")
+ggsave("figure2.pdf", plot = patch, path = "output", width = 180, height = 100, units = "mm")
