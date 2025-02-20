@@ -141,6 +141,7 @@ figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ances
 
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
+delongtest$Adjusted.P.val <- p.adjust(delongtest$De.Long.P.val, method = "BH")
 
 write.csv(delongtest, "output/gnomAD_RVIS_DeLongTest.csv", row.names = FALSE)
 
@@ -294,6 +295,7 @@ figure_1d <- ggplot(UKB_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry
 
 # Compiling Delong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
+delongtest$Adjusted.P.val <- p.adjust(delongtest$De.Long.P.val, method = "BH")
 
 write.csv(delongtest, "output/UKB_RVIS_DeLongTest.csv", row.names = FALSE)
 
