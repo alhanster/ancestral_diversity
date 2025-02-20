@@ -88,6 +88,8 @@ MTR_AUC <- MTR_AUC %>%
   rename("Ancestry" = score)
 
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
+delongtest$Adjusted.P.val <- p.adjust(delongtest$De.Long.P.val, method = "BH")
+
 write.csv(delongtest, "output/MTR_DeLongTest.csv", row.names = FALSE)
 
 # Logistic Regression
