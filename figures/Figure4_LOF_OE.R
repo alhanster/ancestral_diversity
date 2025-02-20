@@ -92,6 +92,7 @@ LOF_OE_AUC <- LOF_OE_AUC %>%
 
 # Compiling DeLong Test
 delongtest <- rbind(dee_delong, dd_delong, asd_delong, mgi_delong, HI_delong)
+delongtest$Adjusted.P.val <- p.adjust(delongtest$De.Long.P.val, method = "BH")
 
 write.csv(delongtest, "output/LOF_OE_DeLongTest.csv", row.names = FALSE)
 
