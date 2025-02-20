@@ -13,7 +13,6 @@ cd ancestry_diversity
 Rscript figures/Figure1_RVIS.R
 Rscript figures/Figure2_MTR.R
 Rscript figures/Figure4_LOF_OE.R
-Rscript figures/Supp_Figure3_LOF_FDR.R
 ```
 
 # Dependencies
