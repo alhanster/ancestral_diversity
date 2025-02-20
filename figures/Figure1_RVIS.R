@@ -122,7 +122,7 @@ gnomAD_RVIS_AUC$`Gene List` <- factor(gnomAD_RVIS_AUC$`Gene List`,
 
 # Figure 1B: gnomAD RVIS Performances by Ancestry
 figure_1b <- ggplot(gnomAD_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry)) +
-  geom_point(position = position_jitter(width = 0.25), size = 1, alpha = 0.5) +
+  geom_point(position = position_jitter(width = 0.25), size = 1, alpha = 0.7) +
   labs(y = "AUC Scores") +
   ylim(0.6, 0.95)+
   theme_classic(base_size=7)+
@@ -275,7 +275,7 @@ UKB_RVIS_AUC$`Gene List` <- factor(UKB_RVIS_AUC$`Gene List`,
 
 # Figure 1D: UKBiobank RVIS Performances by Ancestry
 figure_1d <- ggplot(UKB_RVIS_AUC, aes(x = `Gene List`, y = AUC, color = Ancestry)) +
-  geom_point(position = position_jitter(width = 0.25), size = 1, alpha = 0.5) +
+  geom_point(position = position_jitter(width = 0.25), size = 1, alpha = 0.7) +
   labs(y = "AUC Scores") +
   scale_fill_manual(values = c("Ancestry A" = "blue", "Ancestry B" = "red")) +
   ylim(0.6, 0.95)+
